@@ -2,7 +2,7 @@
   "name": "clia-swagger-generator",
   "displayName": "Clia Swagger Generator",
   "description": "Generate Swagger description from Rust Web API",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "publisher": "clia",
   "author": {
     "name": "Cris Liao",

@@ -53,7 +53,7 @@ export class SwaggerWebview extends BaseWebview {
 
         this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.copy-response-body', this.copyBody, this));
         this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.save-response', this.save, this));
-        // this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.save-response-body', this.saveBody, this));
+        this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.save-response-body', this.saveBody, this));
     }
 
     public async render(response: string, column: ViewColumn) {
