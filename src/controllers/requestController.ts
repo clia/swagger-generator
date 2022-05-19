@@ -1,6 +1,6 @@
 import { ExtensionContext, Range, TextDocument, ViewColumn, window } from 'vscode';
 import Logger from '../logger';
-import { IRestClientSettings, RequestSettings, RestClientSettings } from '../models/configurationSettings';
+import { ICliaSwaggerSettings, RequestSettings, RestClientSettings } from '../models/configurationSettings';
 import { HistoricalHttpRequest, HttpRequest } from '../models/httpRequest';
 import { RequestMetadata } from '../models/requestMetadata';
 import { RequestParserFactory } from '../models/requestParserFactory';
@@ -12,20 +12,22 @@ import { Selector } from '../utils/selector';
 import { UserDataManager } from '../utils/userDataManager';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
 import { HttpResponseTextDocumentView } from '../views/httpResponseTextDocumentView';
-import { HttpResponseWebview } from '../views/httpResponseWebview';
+// import { HttpResponseWebview } from '../views/httpResponseWebview';
+import { SwaggerWebview } from '../views/swaggerWebview';
+import { SwaggerGenerator } from '../swagger/generator';
 
 export class RequestController {
     private _requestStatusEntry: RequestStatusEntry;
-    private _httpClient: HttpClient;
-    private _webview: HttpResponseWebview;
+    // private _httpClient: HttpClient;
+    private _webview: SwaggerWebview;
     private _textDocumentView: HttpResponseTextDocumentView;
-    private _lastRequestSettingTuple: [HttpRequest, IRestClientSettings];
+    private _lastRequestSettingTuple: [HttpRequest, ICliaSwaggerSettings];
     private _lastPendingRequest?: HttpRequest;
 
     public constructor(context: ExtensionContext) {
         this._requestStatusEntry = new RequestStatusEntry();
-        this._httpClient = new HttpClient();
-        this._webview = new HttpResponseWebview(context);
+        // this._httpClient = new HttpClient();
+        this._webview = new SwaggerWebview(context);
         this._webview.onDidCloseAllWebviewPanels(() => this._requestStatusEntry.update({ state: RequestState.Closed }));
         this._textDocumentView = new HttpResponseTextDocumentView();
     }
@@ -38,29 +40,34 @@ export class RequestController {
             return;
         }
 
-        const selectedRequest = await Selector.getRequest(editor, range);
-        if (!selectedRequest) {
+        const swagger = SwaggerGenerator.createSwagger(document, range);
+        if (!swagger) {
             return;
         }
 
-        const { text, metadatas } = selectedRequest;
-        const name = metadatas.get(RequestMetadata.Name);
+        // const selectedRequest = await Selector.getRequest(editor, range);
+        // if (!selectedRequest) {
+        //     return;
+        // }
 
-        if (metadatas.has(RequestMetadata.Note)) {
-            const note = name ? `Are you sure you want to send the request "${name}"?` : 'Are you sure you want to send this request?';
-            const userConfirmed = await window.showWarningMessage(note, 'Yes', 'No');
-            if (userConfirmed !== 'Yes') {
-                return;
-            }
-        }
+        // const { text, metadatas } = selectedRequest;
+        // const name = metadatas.get(RequestMetadata.Name);
 
-        const requestSettings = new RequestSettings(metadatas);
-        const settings: IRestClientSettings = new RestClientSettings(requestSettings);
+        // if (metadatas.has(RequestMetadata.Note)) {
+        //     const note = name ? `Are you sure you want to send the request "${name}"?` : 'Are you sure you want to send this request?';
+        //     const userConfirmed = await window.showWarningMessage(note, 'Yes', 'No');
+        //     if (userConfirmed !== 'Yes') {
+        //         return;
+        //     }
+        // }
 
-        // parse http request
-        const httpRequest = await RequestParserFactory.createRequestParser(text, settings).parseHttpRequest(name);
+        // const requestSettings = new RequestSettings(metadatas);
+        // const settings: ICliaSwaggerSettings = new RestClientSettings(requestSettings);
 
-        await this.runCore(httpRequest, settings, document);
+        // // parse http request
+        // const httpRequest = await RequestParserFactory.createRequestParser(text, settings).parseHttpRequest(name);
+
+        await this.runCore(swagger, document);
     }
 
     @trace('Rerun Request')
@@ -71,8 +78,8 @@ export class RequestController {
 
         const [request, settings] = this._lastRequestSettingTuple;
 
-        // TODO: recover from last request settings
-        await this.runCore(request, settings);
+        // // TODO: recover from last request settings
+        // await this.runCore(request, settings);
     }
 
     @trace('Cancel Request')
@@ -82,66 +89,65 @@ export class RequestController {
         this._requestStatusEntry.update({ state: RequestState.Cancelled });
     }
 
-    private async runCore(httpRequest: HttpRequest, settings: IRestClientSettings, document?: TextDocument) {
+    private async runCore(swagger: string, _document?: TextDocument) {
         // clear status bar
         this._requestStatusEntry.update({ state: RequestState.Pending });
 
-        // set last request and last pending request
-        this._lastPendingRequest = httpRequest;
-        this._lastRequestSettingTuple = [httpRequest, settings];
+        // // set last request and last pending request
+        // this._lastPendingRequest = httpRequest;
+        // this._lastRequestSettingTuple = [httpRequest, settings];
 
         // set http request
         try {
-            const response = await this._httpClient.send(httpRequest, settings);
+            // const response = await this._httpClient.send(httpRequest, settings);
 
-            // check cancel
-            if (httpRequest.isCancelled) {
-                return;
-            }
+            // // check cancel
+            // if (httpRequest.isCancelled) {
+            //     return;
+            // }
 
-            this._requestStatusEntry.update({ state: RequestState.Received, response });
+            // this._requestStatusEntry.update({ state: RequestState.Received, response });
 
-            if (httpRequest.name && document) {
-                RequestVariableCache.add(document, httpRequest.name, response);
-            }
+            // if (httpRequest.name && document) {
+            //     RequestVariableCache.add(document, httpRequest.name, response);
+            // }
 
             try {
                 const activeColumn = window.activeTextEditor!.viewColumn;
-                const previewColumn = settings.previewColumn === ViewColumn.Active
-                    ? activeColumn
-                    : ((activeColumn as number) + 1) as ViewColumn;
-                if (settings.previewResponseInUntitledDocument) {
-                    this._textDocumentView.render(response, previewColumn);
-                } else if (previewColumn) {
-                    this._webview.render(response, previewColumn);
-                }
+                const previewColumn = ((activeColumn as number) + 1) as ViewColumn;
+                // if (settings.previewResponseInUntitledDocument) {
+                // this._textDocumentView.renderText(swagger, previewColumn);
+                // } else if (previewColumn) {
+                this._webview.render(swagger, previewColumn);
+                // this._textDocumentView.renderText(swagger, previewColumn);
+                // }
             } catch (reason) {
                 Logger.error('Unable to preview response:', reason);
                 window.showErrorMessage(reason);
             }
 
-            // persist to history json file
-            await UserDataManager.addToRequestHistory(HistoricalHttpRequest.convertFromHttpRequest(httpRequest));
+            // // persist to history json file
+            // await UserDataManager.addToRequestHistory(HistoricalHttpRequest.convertFromHttpRequest(httpRequest));
         } catch (error) {
-            // check cancel
-            if (httpRequest.isCancelled) {
-                return;
-            }
+            // // check cancel
+            // if (httpRequest.isCancelled) {
+            //     return;
+            // }
 
             if (error.code === 'ETIMEDOUT') {
-                error.message = `Request timed out. Double-check your network connection and/or raise the timeout duration (currently set to ${settings.timeoutInMilliseconds}ms) as needed: 'clia-rest-client.timeoutinmilliseconds'. Details: ${error}.`;
+                error.message = `Request timed out. Double-check your network connection and/or raise the timeout duration (currently set to ms) as needed: 'clia-swagger-generator.timeoutinmilliseconds'. Details: ${error}.`;
             } else if (error.code === 'ECONNREFUSED') {
                 error.message = `The connection was rejected. Either the requested service isn’t running on the requested server/port, the proxy settings in vscode are misconfigured, or a firewall is blocking requests. Details: ${error}.`;
             } else if (error.code === 'ENETUNREACH') {
                 error.message = `You don't seem to be connected to a network. Details: ${error}`;
             }
             this._requestStatusEntry.update({ state: RequestState.Error });
-            Logger.error('Failed to send request:', error);
+            Logger.error('Failed to generate swagger:', error);
             window.showErrorMessage(error.message);
         } finally {
-            if (this._lastPendingRequest === httpRequest) {
-                this._lastPendingRequest = undefined;
-            }
+            // if (this._lastPendingRequest === httpRequest) {
+            //     this._lastPendingRequest = undefined;
+            // }
         }
     }
 
@@ -149,4 +155,5 @@ export class RequestController {
         this._requestStatusEntry.dispose();
         this._webview.dispose();
     }
+
 }

@@ -1,27 +1,27 @@
 {
-  "name": "clia-rest-client",
-  "displayName": "Clia REST Client",
-  "description": "REST Client for Visual Studio Code with URL Signature",
-  "version": "0.25.0",
+  "name": "clia-swagger-generator",
+  "displayName": "Clia Swagger Generator",
+  "description": "Generate Swagger description from Rust Web API",
+  "version": "0.1.0",
   "publisher": "clia",
   "author": {
     "name": "Cris Liao",
     "email": "clia@163.com"
   },
-  "icon": "images/rest_icon.png",
+  "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#000000",
     "theme": "dark"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/clia/vscode-cliarestclient/issues",
+    "url": "https://github.com/clia/swagger-generator/issues",
     "email": "clia@163.com"
   },
-  "homepage": "https://github.com/clia/vscode-cliarestclient/blob/master/README.md",
+  "homepage": "https://github.com/clia/swagger-generator/blob/master/README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/clia/vscode-cliarestclient.git"
+    "url": "https://github.com/clia/swagger-generator.git"
   },
   "engines": {
     "vscode": "^1.57.0"
@@ -33,29 +33,29 @@
     "Programming Languages"
   ],
   "keywords": [
-    "REST",
-    "Http",
-    "GraphQL",
+    "Swagger",
+    "Generator",
+    "Rust",
     "multi-root ready"
   ],
   "activationEvents": [
-    "onCommand:clia-rest-client.request",
-    "onCommand:clia-rest-client.history",
-    "onCommand:clia-rest-client.clear-history",
-    "onCommand:clia-rest-client.save-response",
-    "onCommand:clia-rest-client.save-response-body",
-    "onCommand:clia-rest-client.copy-response-body",
-    "onCommand:clia-rest-client.switch-environment",
-    "onCommand:clia-rest-client.clear-aad-token-cache",
-    "onCommand:clia-rest-client.cancel-request",
-    "onCommand:clia-rest-client.rerun-last-request",
-    "onCommand:clia-rest-client.generate-codesnippet",
-    "onCommand:clia-rest-client.copy-codesnippet",
-    "onCommand:clia-rest-client.copy-request-as-curl",
-    "onCommand:clia-rest-client.fold-response",
-    "onCommand:clia-rest-client.unfold-response",
-    "onLanguage:http",
-    "onLanguage:markdown"
+    "onCommand:clia-swagger-generator.request",
+    "onCommand:clia-swagger-generator.history",
+    "onCommand:clia-swagger-generator.clear-history",
+    "onCommand:clia-swagger-generator.save-response",
+    "onCommand:clia-swagger-generator.save-response-body",
+    "onCommand:clia-swagger-generator.copy-response-body",
+    "onCommand:clia-swagger-generator.switch-environment",
+    "onCommand:clia-swagger-generator.clear-aad-token-cache",
+    "onCommand:clia-swagger-generator.cancel-request",
+    "onCommand:clia-swagger-generator.rerun-last-request",
+    "onCommand:clia-swagger-generator.generate-codesnippet",
+    "onCommand:clia-swagger-generator.copy-codesnippet",
+    "onCommand:clia-swagger-generator.copy-request-as-curl",
+    "onCommand:clia-swagger-generator.fold-response",
+    "onCommand:clia-swagger-generator.unfold-response",
+    "onLanguage:rust",
+    "onLanguage:http"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -90,235 +90,230 @@
     ],
     "commands": [
       {
-        "command": "clia-rest-client.request",
-        "title": "Send Request",
-        "category": "Rest Client"
+        "command": "clia-swagger-generator.request",
+        "title": "Generate Swagger",
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.rerun-last-request",
+        "command": "clia-swagger-generator.rerun-last-request",
         "title": "Rerun Last Request",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.cancel-request",
+        "command": "clia-swagger-generator.cancel-request",
         "title": "Cancel Request",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.switch-environment",
+        "command": "clia-swagger-generator.switch-environment",
         "title": "Switch Environment",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.history",
+        "command": "clia-swagger-generator.history",
         "title": "View Request History",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.clear-history",
+        "command": "clia-swagger-generator.clear-history",
         "title": "Clear Request History",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.save-response",
-        "title": "Save Full Response",
+        "command": "clia-swagger-generator.save-response",
+        "title": "Save Swagger.json",
         "icon": {
           "light": "./images/save.svg",
           "dark": "./images/save-inverse.svg"
         },
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.save-response-body",
+        "command": "clia-swagger-generator.save-response-body",
         "title": "Save Response Body",
         "icon": {
           "light": "./images/save-body.svg",
           "dark": "./images/save-body-inverse.svg"
         },
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.copy-response-body",
+        "command": "clia-swagger-generator.copy-response-body",
         "title": "Copy Response Body",
         "icon": {
           "light": "./images/copy.svg",
           "dark": "./images/copy-inverse.svg"
         },
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.generate-codesnippet",
+        "command": "clia-swagger-generator.generate-codesnippet",
         "title": "Generate Code Snippet",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.copy-codesnippet",
+        "command": "clia-swagger-generator.copy-codesnippet",
         "title": "Copy Code Snippet",
         "icon": {
           "light": "./images/copy.svg",
           "dark": "./images/copy-inverse.svg"
         },
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.copy-request-as-curl",
+        "command": "clia-swagger-generator.copy-request-as-curl",
         "title": "Copy Request As cURL",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.clear-aad-token-cache",
+        "command": "clia-swagger-generator.clear-aad-token-cache",
         "title": "Clear Azure AD Token Cache",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.fold-response",
+        "command": "clia-swagger-generator.fold-response",
         "title": "Fold Response",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       },
       {
-        "command": "clia-rest-client.unfold-response",
+        "command": "clia-swagger-generator.unfold-response",
         "title": "Unfold Response",
-        "category": "Rest Client"
+        "category": "Clia Swagger Generator"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "clia-rest-client.fold-response",
-          "when": "httpResponsePreviewFocus"
+          "command": "clia-swagger-generator.fold-response",
+          "when": "cliaSwaggerPreviewFocus"
         },
         {
-          "command": "clia-rest-client.unfold-response",
-          "when": "httpResponsePreviewFocus"
+          "command": "clia-swagger-generator.unfold-response",
+          "when": "cliaSwaggerPreviewFocus"
         },
         {
-          "command": "clia-rest-client.save-response",
-          "when": "httpResponsePreviewFocus"
+          "command": "clia-swagger-generator.save-response",
+          "when": "cliaSwaggerPreviewFocus"
         },
         {
-          "command": "clia-rest-client.save-response-body",
-          "when": "httpResponsePreviewFocus"
+          "command": "clia-swagger-generator.save-response-body",
+          "when": "cliaSwaggerPreviewFocus"
         },
         {
-          "command": "clia-rest-client.copy-response-body",
-          "when": "httpResponsePreviewFocus"
+          "command": "clia-swagger-generator.copy-response-body",
+          "when": "cliaSwaggerPreviewFocus"
         },
         {
-          "command": "clia-rest-client.copy-codesnippet",
+          "command": "clia-swagger-generator.copy-codesnippet",
           "when": "codeSnippetPreviewFocus"
         }
       ],
       "editor/title": [
         {
-          "when": "httpResponsePreviewFocus",
-          "command": "clia-rest-client.save-response",
+          "when": "cliaSwaggerPreviewFocus",
+          "command": "clia-swagger-generator.save-response",
           "group": "navigation@1"
         },
         {
-          "when": "httpResponsePreviewFocus",
-          "command": "clia-rest-client.save-response-body",
+          "when": "cliaSwaggerPreviewFocus",
+          "command": "clia-swagger-generator.copy-response-body",
           "group": "navigation@2"
         },
         {
-          "when": "httpResponsePreviewFocus",
-          "command": "clia-rest-client.copy-response-body",
-          "group": "navigation@3"
+          "when": "cliaSwaggerPreviewFocus",
+          "command": "clia-swagger-generator.fold-response",
+          "group": "1_clia-swagger-generator@1"
         },
         {
-          "when": "httpResponsePreviewFocus",
-          "command": "clia-rest-client.fold-response",
-          "group": "1_rest-client@1"
-        },
-        {
-          "when": "httpResponsePreviewFocus",
-          "command": "clia-rest-client.unfold-response",
-          "group": "1_rest-client@2"
+          "when": "cliaSwaggerPreviewFocus",
+          "command": "clia-swagger-generator.unfold-response",
+          "group": "1_clia-swagger-generator@2"
         },
         {
           "when": "codeSnippetPreviewFocus",
-          "command": "clia-rest-client.copy-codesnippet",
+          "command": "clia-swagger-generator.copy-codesnippet",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "command": "clia-rest-client.request",
+          "command": "clia-swagger-generator.request",
           "when": "editorTextFocus && editorLangId == http",
-          "group": "clia-rest-client@1"
+          "group": "clia-swagger-generator@1"
         },
         {
-          "command": "clia-rest-client.generate-codesnippet",
+          "command": "clia-swagger-generator.generate-codesnippet",
           "when": "editorTextFocus && editorLangId == http",
-          "group": "clia-rest-client@2"
+          "group": "clia-swagger-generator@2"
         },
         {
-          "command": "clia-rest-client.copy-request-as-curl",
+          "command": "clia-swagger-generator.copy-request-as-curl",
           "when": "editorTextFocus && editorLangId == http",
-          "group": "clia-rest-client@3"
+          "group": "clia-swagger-generator@3"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "clia-rest-client.request",
+        "command": "clia-swagger-generator.request",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "clia-rest-client.request",
+        "command": "clia-swagger-generator.request",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
       },
       {
-        "command": "clia-rest-client.rerun-last-request",
+        "command": "clia-swagger-generator.rerun-last-request",
         "key": "ctrl+alt+l",
         "mac": "cmd+alt+l",
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "clia-rest-client.rerun-last-request",
+        "command": "clia-swagger-generator.rerun-last-request",
         "key": "ctrl+alt+l",
         "mac": "cmd+alt+l",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
       },
       {
-        "command": "clia-rest-client.rerun-last-request",
+        "command": "clia-swagger-generator.rerun-last-request",
         "key": "ctrl+alt+l",
         "mac": "cmd+alt+l",
-        "when": "httpResponsePreviewFocus"
+        "when": "cliaSwaggerPreviewFocus"
       },
       {
-        "command": "clia-rest-client.cancel-request",
+        "command": "clia-swagger-generator.cancel-request",
         "key": "ctrl+alt+k",
         "mac": "cmd+alt+k",
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "clia-rest-client.cancel-request",
+        "command": "clia-swagger-generator.cancel-request",
         "key": "ctrl+alt+k",
         "mac": "cmd+alt+k",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
       },
       {
-        "command": "clia-rest-client.history",
+        "command": "clia-swagger-generator.history",
         "key": "ctrl+alt+h",
         "mac": "cmd+alt+h"
       },
       {
-        "command": "clia-rest-client.switch-environment",
+        "command": "clia-swagger-generator.switch-environment",
         "key": "ctrl+alt+e",
         "mac": "cmd+alt+e"
       },
       {
-        "command": "clia-rest-client.generate-codesnippet",
+        "command": "clia-swagger-generator.generate-codesnippet",
         "key": "ctrl+alt+c",
         "mac": "cmd+alt+c",
         "when": "editorTextFocus && editorLangId == 'http'"
       },
       {
-        "command": "clia-rest-client.generate-codesnippet",
+        "command": "clia-swagger-generator.generate-codesnippet",
         "key": "ctrl+alt+c",
         "mac": "cmd+alt+c",
         "when": "editorTextFocus && editorLangId == 'plaintext'"
@@ -326,15 +321,15 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "Clia REST Client",
+      "title": "Clia Swagger Generator",
       "properties": {
-        "clia-rest-client.followredirect": {
+        "clia-swagger-generator.followredirect": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Follow HTTP 3xx responses as redirects."
         },
-        "clia-rest-client.defaultHeaders": {
+        "clia-swagger-generator.defaultHeaders": {
           "type": "object",
           "default": {
             "User-Agent": "vscode-restclient"
@@ -342,54 +337,54 @@
           "scope": "resource",
           "description": "If particular headers are omitted in request headers, these will be added as headers for each request."
         },
-        "clia-rest-client.timeoutinmilliseconds": {
+        "clia-swagger-generator.timeoutinmilliseconds": {
           "type": "integer",
           "default": 0,
           "scope": "resource",
           "description": "Timeout in milliseconds. 0 for infinity"
         },
-        "clia-rest-client.showResponseInDifferentTab": {
+        "clia-swagger-generator.showResponseInDifferentTab": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Show response in different tab"
         },
-        "clia-rest-client.requestNameAsResponseTabTitle": {
+        "clia-swagger-generator.requestNameAsResponseTabTitle": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Show request name as the response tab title"
         },
-        "clia-rest-client.rememberCookiesForSubsequentRequests": {
+        "clia-swagger-generator.rememberCookiesForSubsequentRequests": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Remember cookies for subsequent requests"
         },
-        "clia-rest-client.enableTelemetry": {
+        "clia-swagger-generator.enableTelemetry": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Send out anonymous usage data"
         },
-        "clia-rest-client.excludeHostsForProxy": {
+        "clia-swagger-generator.excludeHostsForProxy": {
           "type": "array",
           "default": [],
           "scope": "resource",
           "description": "Excluded hosts when using using proxy settings"
         },
-        "clia-rest-client.fontSize": {
+        "clia-swagger-generator.fontSize": {
           "type": "number",
           "scope": "resource",
           "markdownDescription": "Controls the font size in pixels used in the response preview. When set to `0`, the value of `#editor.fontSize#` is used."
         },
-        "clia-rest-client.fontFamily": {
+        "clia-swagger-generator.fontFamily": {
           "type": "string",
           "default": null,
           "scope": "resource",
           "description": "Controls the font family used in the response preview"
         },
-        "clia-rest-client.fontWeight": {
+        "clia-swagger-generator.fontWeight": {
           "type": "string",
           "enum": [
             "normal",
@@ -409,7 +404,7 @@
           "scope": "resource",
           "description": "Controls the font weight used in the response preview"
         },
-        "clia-rest-client.environmentVariables": {
+        "clia-swagger-generator.environmentVariables": {
           "type": "object",
           "default": {
             "$shared": {}
@@ -434,7 +429,7 @@
             ]
           }
         },
-        "clia-rest-client.mimeAndFileExtensionMapping": {
+        "clia-swagger-generator.mimeAndFileExtensionMapping": {
           "type": "object",
           "default": {},
           "scope": "resource",
@@ -447,13 +442,13 @@
           },
           "markdownDescription": "Sets the custom mapping of mime type and file extension of saved response body (e.g., `{\"application/atom+xml\": \"xml\"}`)"
         },
-        "clia-rest-client.previewResponseInUntitledDocument": {
+        "clia-swagger-generator.previewResponseInUntitledDocument": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Preview response in untitled document if set to true, otherwise displayed in html view"
         },
-        "clia-rest-client.certificates": {
+        "clia-swagger-generator.certificates": {
           "type": "object",
           "default": {},
           "scope": "resource",
@@ -495,13 +490,13 @@
             ]
           }
         },
-        "clia-rest-client.suppressResponseBodyContentTypeValidationWarning": {
+        "clia-swagger-generator.suppressResponseBodyContentTypeValidationWarning": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Suppress response body content type validation"
         },
-        "clia-rest-client.previewOption": {
+        "clia-swagger-generator.previewOption": {
           "type": "string",
           "enum": [
             "full",
@@ -519,27 +514,27 @@
           "scope": "resource",
           "description": "Response preview output option"
         },
-        "clia-rest-client.disableHighlightResonseBodyForLargeResponse": {
+        "clia-swagger-generator.disableHighlightResonseBodyForLargeResponse": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "markdownDescription": "Controls whether to highlight response body for response whose size is larger than limit specified by `clia-rest-client.largeResponseSizeLimitInMB`"
+          "markdownDescription": "Controls whether to highlight response body for response whose size is larger than limit specified by `clia-swagger-generator.largeResponseSizeLimitInMB`"
         },
-        "clia-rest-client.disableAddingHrefLinkForLargeResponse": {
+        "clia-swagger-generator.disableAddingHrefLinkForLargeResponse": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "markdownDescription": "Controls whether to add href link in previewed response for response whose size is larger than limit specified by `clia-rest-client.largeResponseSizeLimitInMB`"
+          "markdownDescription": "Controls whether to add href link in previewed response for response whose size is larger than limit specified by `clia-swagger-generator.largeResponseSizeLimitInMB`"
         },
-        "clia-rest-client.largeResponseBodySizeLimitInMB": {
+        "clia-swagger-generator.largeResponseBodySizeLimitInMB": {
           "type": "number",
           "default": 5,
           "minimum": 0,
           "exclusiveMinimum": true,
           "scope": "resource",
-          "markdownDescription": "Set the response body size threshold of MB to identify whether a response is a so-called 'large response', only used when `clia-rest-client.disableHighlightResonseBodyForLargeResponse` and/or `clia-rest-client.disableAddingHrefLinkForLargeResponse` is set to true"
+          "markdownDescription": "Set the response body size threshold of MB to identify whether a response is a so-called 'large response', only used when `clia-swagger-generator.disableHighlightResonseBodyForLargeResponse` and/or `clia-swagger-generator.disableAddingHrefLinkForLargeResponse` is set to true"
         },
-        "clia-rest-client.previewColumn": {
+        "clia-swagger-generator.previewColumn": {
           "type": "string",
           "enum": [
             "current",
@@ -553,13 +548,13 @@
           "scope": "resource",
           "description": "Response preview column option"
         },
-        "clia-rest-client.previewResponsePanelTakeFocus": {
+        "clia-swagger-generator.previewResponsePanelTakeFocus": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Preview response panel will take focus after receiving response."
         },
-        "clia-rest-client.formParamEncodingStrategy": {
+        "clia-swagger-generator.formParamEncodingStrategy": {
           "type": "string",
           "enum": [
             "automatic",
@@ -575,19 +570,19 @@
           "scope": "resource",
           "markdownDescription": "Form param encoding strategy for request body of `x-www-form-urlencoded`."
         },
-        "clia-rest-client.addRequestBodyLineIndentationAroundBrackets": {
+        "clia-swagger-generator.addRequestBodyLineIndentationAroundBrackets": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "markdownDescription": "Add line indentation around brackets(`{}`, `<>`, `[]`) in request body when pressing enter."
         },
-        "clia-rest-client.decodeEscapedUnicodeCharacters": {
+        "clia-swagger-generator.decodeEscapedUnicodeCharacters": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "Decode escaped unicode characters in response body."
         },
-        "clia-rest-client.logLevel": {
+        "clia-swagger-generator.logLevel": {
           "type": "string",
           "enum": [
             "error",
@@ -599,19 +594,19 @@
           "scope": "resource",
           "description": "The verbosity of logging in the REST output panel"
         },
-        "clia-rest-client.enableSendRequestCodeLens": {
+        "clia-swagger-generator.enableSendRequestCodeLens": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Enable/disable sending request CodeLens in request file"
         },
-        "clia-rest-client.enableCustomVariableReferencesCodeLens": {
+        "clia-swagger-generator.enableCustomVariableReferencesCodeLens": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Enable/disable custom variable references CodeLens in request file"
         },
-        "clia-rest-client.urlSignConfiguration": {
+        "clia-swagger-generator.urlSignConfiguration": {
           "type": "object",
           "default": {
             "enableUrlSign": true,
@@ -635,7 +630,7 @@
           "scope": "resource",
           "markdownDescription": "Sets the URL Signature configuration"
         },
-        "clia-rest-client.urlSignKeySecrets": {
+        "clia-swagger-generator.urlSignKeySecrets": {
           "type": "object",
           "default": {},
           "scope": "resource",
@@ -648,11 +643,29 @@
           },
           "markdownDescription": "Sets the key and secret pairs for URL Signature"
         },
-        "clia-rest-client.useContentDispositionFilename": {
+        "clia-swagger-generator.useContentDispositionFilename": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "Enable/disable using filename from 'content-disposition' header, when saving response body"
+        },
+        "clia-swagger-generator.host": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "description": "Swagger host"
+        },
+        "clia-swagger-generator.basePath": {
+          "type": "string",
+          "default": "/",
+          "scope": "resource",
+          "description": "Swagger basePath"
+        },
+        "clia-swagger-generator.schemes": {
+          "type": "string",
+          "default": "https",
+          "scope": "resource",
+          "description": "Swagger schemes, example: http,https"
         }
       }
     },

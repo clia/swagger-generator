@@ -10,8 +10,8 @@ export class MarkdownCodeLensProvider implements CodeLensProvider {
             const snippetRange = new Range(range.start.line + 1, 0, range.end.line, 0);
             const cmd: Command = {
                 arguments: [document, snippetRange],
-                title: 'Send Request',
-                command: 'clia-rest-client.request',
+                title: 'Generate Swagger',
+                command: 'clia-swagger-generator.request',
             };
             blocks.push(new CodeLens(range, cmd));
         }

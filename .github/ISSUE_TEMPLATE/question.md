@@ -1,5 +1,5 @@
 ---
 name: Question
-about: Ask a question about REST Client
+about: Ask a question about Clia Swagger
 
 ---

@@ -26,6 +26,7 @@ import { UserDataManager } from './utils/userDataManager';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export async function activate(context: ExtensionContext) {
+console.log("init");
     await UserDataManager.initialize();
 
     const requestController = new RequestController(context);
@@ -36,22 +37,26 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(historyController);
     context.subscriptions.push(codeSnippetController);
     context.subscriptions.push(environmentController);
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.request', ((document: TextDocument, range: Range) => requestController.run(range))));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.rerun-last-request', () => requestController.rerun()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.cancel-request', () => requestController.cancel()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.history', () => historyController.save()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.clear-history', () => historyController.clear()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.generate-codesnippet', () => codeSnippetController.run()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.copy-request-as-curl', () => codeSnippetController.copyAsCurl()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.switch-environment', () => environmentController.switchEnvironment()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client.clear-aad-token-cache', () => AadTokenCache.clear()));
-    context.subscriptions.push(commands.registerCommand('clia-rest-client._openDocumentLink', args => {
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.request', ((document: TextDocument, range: Range) => requestController.run(range))));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.rerun-last-request', () => requestController.rerun()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.cancel-request', () => requestController.cancel()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.history', () => historyController.save()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.clear-history', () => historyController.clear()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.generate-codesnippet', () => codeSnippetController.run()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.copy-request-as-curl', () => codeSnippetController.copyAsCurl()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.switch-environment', () => environmentController.switchEnvironment()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator.clear-aad-token-cache', () => AadTokenCache.clear()));
+    context.subscriptions.push(commands.registerCommand('clia-swagger-generator._openDocumentLink', args => {
         workspace.openTextDocument(Uri.parse(args.path)).then(window.showTextDocument, error => {
             window.showErrorMessage(error.message);
         });
     }));
 
     const documentSelector = [
+        { language: 'rust', scheme: '*' }
+    ];
+
+    const documentSelector2 = [
         { language: 'http', scheme: '*' }
     ];
 
@@ -59,30 +64,35 @@ export async function activate(context: ExtensionContext) {
         { language: 'markdown', scheme: '*' }
     ];
 
-    context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector, new HttpCompletionItemProvider()));
-    context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector, new RequestVariableCompletionItemProvider(), '.'));
-    context.subscriptions.push(languages.registerHoverProvider(documentSelector, new EnvironmentOrFileVariableHoverProvider()));
-    context.subscriptions.push(languages.registerHoverProvider(documentSelector, new RequestVariableHoverProvider()));
+    context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector2, new HttpCompletionItemProvider()));
+    context.subscriptions.push(languages.registerCompletionItemProvider(documentSelector2, new RequestVariableCompletionItemProvider(), '.'));
+    context.subscriptions.push(languages.registerHoverProvider(documentSelector2, new EnvironmentOrFileVariableHoverProvider()));
+    context.subscriptions.push(languages.registerHoverProvider(documentSelector2, new RequestVariableHoverProvider()));
+
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
             () => languages.registerCodeLensProvider(documentSelector, new HttpCodeLensProvider()),
             s => s.enableSendRequestCodeLens));
+
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
-            () => languages.registerCodeLensProvider(documentSelector, new FileVariableReferencesCodeLensProvider()),
+            () => languages.registerCodeLensProvider(documentSelector2, new FileVariableReferencesCodeLensProvider()),
             s => s.enableCustomVariableReferencesCodeLens));
+
     context.subscriptions.push(
         new ConfigurationDependentRegistration(
             () => languages.registerCodeLensProvider(mdDocumentSelector, new MarkdownCodeLensProvider()),
             s => s.enableSendRequestCodeLens));
-    context.subscriptions.push(languages.registerDocumentLinkProvider(documentSelector, new RequestBodyDocumentLinkProvider()));
-    context.subscriptions.push(languages.registerDefinitionProvider(documentSelector, new FileVariableDefinitionProvider()));
-    context.subscriptions.push(languages.registerDefinitionProvider(documentSelector, new RequestVariableDefinitionProvider()));
-    context.subscriptions.push(languages.registerReferenceProvider(documentSelector, new FileVariableReferenceProvider()));
-    context.subscriptions.push(languages.registerDocumentSymbolProvider(documentSelector, new HttpDocumentSymbolProvider()));
+
+    context.subscriptions.push(languages.registerDocumentLinkProvider(documentSelector2, new RequestBodyDocumentLinkProvider()));
+    context.subscriptions.push(languages.registerDefinitionProvider(documentSelector2, new FileVariableDefinitionProvider()));
+    context.subscriptions.push(languages.registerDefinitionProvider(documentSelector2, new RequestVariableDefinitionProvider()));
+    context.subscriptions.push(languages.registerReferenceProvider(documentSelector2, new FileVariableReferenceProvider()));
+    context.subscriptions.push(languages.registerDocumentSymbolProvider(documentSelector2, new HttpDocumentSymbolProvider()));
 
     const diagnosticsProvider = new CustomVariableDiagnosticsProvider();
     context.subscriptions.push(diagnosticsProvider);
+console.log("finished");
 }
 
 // this method is called when your extension is deactivated

@@ -7,7 +7,7 @@ import * as url from 'url';
 import { Uri, window } from 'vscode';
 import Logger from '../logger';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
-import { IRestClientSettings, SystemSettings } from '../models/configurationSettings';
+import { ICliaSwaggerSettings, SystemSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { HttpResponse } from '../models/httpResponse';
 import { awsSignature } from './auth/awsSignature';
@@ -41,7 +41,7 @@ export class HttpClient {
         this.cookieStore = new cookieStore(cookieFilePath) as Store;
     }
 
-    public async send(httpRequest: HttpRequest, settings?: IRestClientSettings): Promise<HttpResponse> {
+    public async send(httpRequest: HttpRequest, settings?: ICliaSwaggerSettings): Promise<HttpResponse> {
         settings = settings || SystemSettings.Instance;
 
         this.processUrlSign(httpRequest, settings);
@@ -109,7 +109,7 @@ export class HttpClient {
             ));
     }
 
-    private processUrlSign(httpRequest: HttpRequest, settings: IRestClientSettings) {
+    private processUrlSign(httpRequest: HttpRequest, settings: ICliaSwaggerSettings) {
         const conf = settings.urlSignConfiguration;
         const keySecrets = settings.urlSignKeySecrets;
         const algo = conf.algorithm;
@@ -230,7 +230,7 @@ export class HttpClient {
         return s.replace(/\+/g, "%20").replace(/\*/g, "%2A").replace(/\%7E/g, "~");
     }
 
-    private async prepareOptions(httpRequest: HttpRequest, settings: IRestClientSettings): Promise<got.GotBodyOptions<null>> {
+    private async prepareOptions(httpRequest: HttpRequest, settings: ICliaSwaggerSettings): Promise<got.GotBodyOptions<null>> {
         const originalRequestBody = httpRequest.body;
         let requestBody: string | Buffer | undefined;
         if (originalRequestBody) {
@@ -322,42 +322,42 @@ export class HttpClient {
 
         // set cookie jar
         if (options.cookieJar) {
-            const { getCookieString: originalGetCookieString, setCookie: originalSetCookie } = options.cookieJar;
+            // const { getCookieString: originalGetCookieString, setCookie: originalSetCookie } = options.cookieJar;
 
-            function _setCookie(cookieOrString: Cookie | string, currentUrl: string, opts: CookieJar.SetCookieOptions, cb: SetCookieCallback): void;
-            function _setCookie(cookieOrString: Cookie | string, currentUrl: string, cb: SetCookieCallbackWithoutOptions): void;
-            function _setCookie(cookieOrString: Cookie | string, currentUrl: string, opts: CookieJar.SetCookieOptions | SetCookieCallbackWithoutOptions, cb?: SetCookieCallback): void {
-                if (opts instanceof Function) {
-                    cb = opts;
-                    opts = {};
-                }
-                opts.ignoreError = true;
-                originalSetCookie.call(options.cookieJar, cookieOrString, currentUrl, opts, cb!);
-            }
-            options.cookieJar.setCookie = _setCookie;
+            // function _setCookie(cookieOrString: Cookie | string, currentUrl: string, opts: CookieJar.SetCookieOptions, cb: SetCookieCallback): void;
+            // function _setCookie(cookieOrString: Cookie | string, currentUrl: string, cb: SetCookieCallbackWithoutOptions): void;
+            // function _setCookie(cookieOrString: Cookie | string, currentUrl: string, opts: CookieJar.SetCookieOptions | SetCookieCallbackWithoutOptions, cb?: SetCookieCallback): void {
+            //     if (opts instanceof Function) {
+            //         cb = opts;
+            //         opts = {};
+            //     }
+            //     opts.ignoreError = true;
+            //     originalSetCookie.call(options.cookieJar, cookieOrString, currentUrl, opts, cb!);
+            // }
+            // options.cookieJar.setCookie = _setCookie;
 
-            if (hasHeader(options.headers!, 'cookie')) {
-                let count = 0;
+            // if (hasHeader(options.headers!, 'cookie')) {
+            //     let count = 0;
 
-                function _getCookieString(currentUrl: string, opts: CookieJar.GetCookiesOptions, cb: GetCookieStringCallback): void;
-                function _getCookieString(currentUrl: string, cb: GetCookieStringCallback): void;
-                function _getCookieString(currentUrl: string, opts: CookieJar.GetCookiesOptions | GetCookieStringCallback, cb?: GetCookieStringCallback): void {
-                    if (opts instanceof Function) {
-                        cb = opts;
-                        opts = {};
-                    }
+            //     function _getCookieString(currentUrl: string, opts: CookieJar.GetCookiesOptions, cb: GetCookieStringCallback): void;
+            //     function _getCookieString(currentUrl: string, cb: GetCookieStringCallback): void;
+            //     function _getCookieString(currentUrl: string, opts: CookieJar.GetCookiesOptions | GetCookieStringCallback, cb?: GetCookieStringCallback): void {
+            //         if (opts instanceof Function) {
+            //             cb = opts;
+            //             opts = {};
+            //         }
 
-                    originalGetCookieString.call(options.cookieJar, currentUrl, opts, (err, cookies) => {
-                        if (err || count > 0 || !cookies) {
-                            cb!(err, cookies);
-                        }
+            //         originalGetCookieString.call(options.cookieJar, currentUrl, opts, (err, cookies) => {
+            //             if (err || count > 0 || !cookies) {
+            //                 cb!(err, cookies);
+            //             }
 
-                        count++;
-                        cb!(null, [cookies, getHeader(options.headers!, 'cookie')].filter(Boolean).join('; '));
-                    });
-                }
-                options.cookieJar.getCookieString = _getCookieString;
-            }
+            //             count++;
+            //             cb!(null, [cookies, getHeader(options.headers!, 'cookie')].filter(Boolean).join('; '));
+            //         });
+            //     }
+            //     options.cookieJar.getCookieString = _getCookieString;
+            // }
         }
 
         return options;
@@ -370,7 +370,7 @@ export class HttpClient {
         });
     }
 
-    private getRequestCertificate(requestUrl: string, settings: IRestClientSettings): Certificate | null {
+    private getRequestCertificate(requestUrl: string, settings: ICliaSwaggerSettings): Certificate | null {
         const host = url.parse(requestUrl).host;
         if (!host || !(host in settings.hostCertificates)) {
             return null;

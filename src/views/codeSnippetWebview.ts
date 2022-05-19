@@ -23,7 +23,7 @@ export class CodeSnippetWebview extends BaseWebview {
     public constructor(context: ExtensionContext) {
         super(context);
 
-        this.context.subscriptions.push(commands.registerCommand('clia-rest-client.copy-codesnippet', this.copy, this));
+        this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.copy-codesnippet', this.copy, this));
     }
 
     public async render(convertResult: string, title: string, lang: string) {

@@ -6,10 +6,10 @@ export class EnvironmentStatusEntry {
 
     public constructor(environment: string) {
         this.environmentEntry = window.createStatusBarItem('environment', StatusBarAlignment.Right, 100);
-        this.environmentEntry.command = 'clia-rest-client.switch-environment';
+        this.environmentEntry.command = 'clia-swagger-generator.switch-environment';
         this.environmentEntry.text = environment;
-        this.environmentEntry.tooltip = 'Switch REST Client Environment';
-        this.environmentEntry.name = 'REST Client Environment';
+        this.environmentEntry.tooltip = 'Switch Clia Swagger Environment';
+        this.environmentEntry.name = 'Clia Swagger Environment';
         this.environmentEntry.show();
 
         window.onDidChangeActiveTextEditor(this.showHideStatusBar, this);

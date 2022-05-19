@@ -1,8 +1,8 @@
 
-export const ExtensionId: string = 'clia.clia-rest-client';
+export const ExtensionId: string = 'clia.clia-swagger-generator';
 export const AiKey: string = 'b08707eb-8911-44c0-955e-5010ed9f45e6';
 
-export const NoEnvironmentSelectedName: string = '29e83c47-00a9-4882-90b5-ef42b1fb5784';
+export const NoEnvironmentSelectedName: string = '49ff6909-e170-4195-8f93-b7041ba47ffb';
 
 export const TimeStampVariableName = "$timestamp";
 export const TimeStampVariableDescription = "Add a number of milliseconds between 1970/1/1 UTC Time and now. \

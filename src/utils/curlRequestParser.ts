@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 import { RequestHeaders } from '../models/base';
-import { IRestClientSettings } from '../models/configurationSettings';
+import { ICliaSwaggerSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { RequestParser } from '../models/requestParser';
 import { base64, hasHeader } from './misc';
@@ -12,7 +12,7 @@ const DefaultContentType: string = 'application/x-www-form-urlencoded';
 
 export class CurlRequestParser implements RequestParser {
 
-    public constructor(private readonly requestRawText: string, private readonly settings: IRestClientSettings) {
+    public constructor(private readonly requestRawText: string, private readonly settings: ICliaSwaggerSettings) {
     }
 
     public async parseHttpRequest(name?: string): Promise<HttpRequest> {

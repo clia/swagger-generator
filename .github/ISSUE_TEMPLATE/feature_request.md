@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for REST Client
+about: Suggest an idea for Clia Swagger
 
 ---
 

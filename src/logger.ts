@@ -6,7 +6,7 @@ class Log {
     private readonly _outputChannel: OutputChannel;
     private readonly _restClientSettings: SystemSettings = SystemSettings.Instance;
     public constructor() {
-        this._outputChannel = window.createOutputChannel('REST');
+        this._outputChannel = window.createOutputChannel('Clia Swagger Generator');
     }
 
     public verbose(message: string, data?: any): void {

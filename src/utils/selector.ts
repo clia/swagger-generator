@@ -122,36 +122,40 @@ export class Selector {
         };
         const requestRanges: [number, number][] = [];
         const delimitedLines = this.getDelimiterRows(lines);
-        delimitedLines.push(lines.length);
+        // delimitedLines.push(lines.length);
 
-        let prev = -1;
+        // let prev = -1;
         for (const current of delimitedLines) {
-            let start = prev + 1;
-            let end = current - 1;
-            while (start <= end) {
-                const startLine = lines[start];
-                if (options.ignoreResponseRange && this.isResponseStatusLine(startLine)) {
-                    break;
-                }
+            let start = current + 1;
+            let end = current + 2;
+            requestRanges.push([start, end]);
 
-                if (options.ignoreCommentLine && this.isCommentLine(startLine)
-                    || options.ignoreEmptyLine && this.isEmptyLine(startLine)
-                    || options.ignoreFileVariableDefinitionLine && this.isFileVariableDefinitionLine(startLine)) {
-                    start++;
-                    continue;
-                }
+            // let start = prev + 1;
+            // let end = current - 1;
+            // while (start <= end) {
+            //     const startLine = lines[start];
+            //     if (options.ignoreResponseRange && this.isResponseStatusLine(startLine)) {
+            //         break;
+            //     }
 
-                const endLine = lines[end];
-                if (options.ignoreCommentLine && this.isCommentLine(endLine)
-                    || options.ignoreEmptyLine && this.isEmptyLine(endLine)) {
-                    end--;
-                    continue;
-                }
+            //     if (options.ignoreCommentLine && this.isCommentLine(startLine)
+            //         || options.ignoreEmptyLine && this.isEmptyLine(startLine)
+            //         || options.ignoreFileVariableDefinitionLine && this.isFileVariableDefinitionLine(startLine)) {
+            //         start++;
+            //         continue;
+            //     }
 
-                requestRanges.push([start, end]);
-                break;
-            }
-            prev = current;
+            //     const endLine = lines[end];
+            //     if (options.ignoreCommentLine && this.isCommentLine(endLine)
+            //         || options.ignoreEmptyLine && this.isEmptyLine(endLine)) {
+            //         end--;
+            //         continue;
+            //     }
+
+            //     requestRanges.push([start, end]);
+            //     break;
+            // }
+            // prev = current;
         }
 
         return requestRanges;
@@ -239,7 +243,7 @@ export class Selector {
 
     private static getDelimiterRows(lines: string[]): number[] {
         return Object.entries(lines)
-            .filter(([, value]) => /^#{3,}/.test(value))
+            .filter(([, value]) => /^#\[web::/.test(value))
             .map(([index, ]) => +index);
     }
 

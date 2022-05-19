@@ -1,10 +1,10 @@
 ---
 name: Bug report
-about: Create a report to help REST Client improve
+about: Create a report to help Clia Swagger improve
 
 ---
 
-- REST Client Version:
+- Clia Swagger Version:
 - VSCode Version:
 - OS Version:
 

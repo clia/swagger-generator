@@ -12,8 +12,8 @@ export class HttpCodeLensProvider implements CodeLensProvider {
             const range = new Range(blockStart, 0, blockEnd, 0);
             const cmd: Command = {
                 arguments: [document, range],
-                title: 'Send Request',
-                command: 'clia-rest-client.request'
+                title: 'Generate Swagger',
+                command: 'clia-swagger-generator.request'
             };
             blocks.push(new CodeLens(range, cmd));
         }

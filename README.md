@@ -1,47 +1,68 @@
-# Clia REST Client
+# Clia Swagger Generator
 
-Clia REST Client is a personal temporary VSCode plugin, forked from [REST Client](https://github.com/Huachao/vscode-restclient), Thanks!
+Clia Swagger Generator is a VSCode extension to generate Swagger description from Rust Web API.
 
-[使用说明](https://juejin.cn/post/7097792519338524686/)
+## Example Rust Web API
 
-## Added Features
+Below is an example Rust Web API definition. You can generate a Swagger description from this code.
 
-### URL Signature
+```rust
+use ntex::http::StatusCode;
+use ntex::web::types::Query;
+use ntex::web::{self, Error, HttpRequest, HttpResponse};
+use serde::{Deserialize, Serialize};
 
-URL Signature method like AliYun's: [https://help.aliyun.com/document_detail/30563.htm](https://help.aliyun.com/document_detail/30563.htm).
-The signature algorithm is configurable. Configuration contains two parts:
+/// Test interface's query.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TestInterfaceQuery {
+    /// Name
+    pub name: String,
+    /// Color
+    pub color: String,
+}
 
-- `Url Sign Configuration`: Configuration for the signature algorithm and names.
-- `Url Sign Key Secrets`: Key and secret pairs for use.
+/// Test interface's response format.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TestInterfaceResponse {
+    /// Return code
+    pub code: i32,
+    /// Return message
+    pub msg: String,
+    /// Return data
+    pub data: TestInterfaceData,
+}
 
-You should disable it in the configuration if you don't want to use this function, the default is enabled.
+/// Test interface's data format.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TestInterfaceData {
+    /// Picture URL
+    pub picture: String,
+}
 
-The default configuration is our's use case.
+/// A test interface.
+///
+/// @returns: TestInterfaceResponse
+///
+#[web::get("/mp/test-interface")]
+pub async fn test_interface(
+    req: HttpRequest,
+    query: Query<TestInterfaceQuery>,
+) -> Result<HttpResponse, Error> {
+    println!("{:?}", req);
+    println!("name: {:?}", query.name);
+    println!("color: {:?}", query.color);
 
-An example AliYun's signature algorithm configuration:
-
-```json
-{
-    "enableUrlSign": true,
-    "algorithm": {
-        "step1OrderParams": true,
-        "step1UrlEncodeParams": true,
-        "step1PercentEncode": true,
-        "step1AddEqual": true,
-        "step1AddAnd": true,
-        "step2SeparatorAnd": true,
-        "step2AddHttpMethod": true,
-        "step2AddPercentEncodeSlash": true,
-        "step2PercentEncode": true,
-        "step3ComputeAlgorithm": "hmacsha1",
-        "step3SecretAppend": "&",
-        "step3TextAlgorithm": "base64"
-    },
-    "keyParamName": "AccessKeyId",
-    "signParamName": "Signature"
+    // response
+    Ok(HttpResponse::build(StatusCode::OK)
+        .content_type("application/json; charset=utf-8")
+        .body(
+            r#"{
+            "code":0,
+            "msg":"success",
+            "data":{
+                "picture":"https://img.com/adcdke.png"
+            }
+        }"#,
+        ))
 }
 ```
-
-step3ComputeAlgorithm supports: `md5` | `hmacsha1`
-
-step3TextAlgorithm supports: `hex` | `base64`

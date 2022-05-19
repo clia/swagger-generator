@@ -1,10 +1,10 @@
 import * as fs from 'fs-extra';
 import * as os from 'os';
-import { Clipboard, commands, env, ExtensionContext, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
+import { languages, Clipboard, commands, env, ExtensionContext, Position, Range, Uri, TextDocument, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { SystemSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
-import { HttpResponse } from '../models/httpResponse';
+// import { string } from '../models/httpResponse';
 import { PreviewOption } from '../models/previewOption';
 import { trace } from '../utils/decorator';
 import { disposeAll } from '../utils/dispose';
@@ -22,23 +22,23 @@ const COPYPATH = 'Copy Path';
 
 type FoldingRange = [number, number];
 
-export class HttpResponseWebview extends BaseWebview {
+export class SwaggerWebview extends BaseWebview {
 
     private readonly urlRegex = /(https?:\/\/[^\s"'<>\]\)\\]+)/gi;
 
-    private readonly panelResponses: Map<WebviewPanel, HttpResponse>;
+    private readonly panelResponses: Map<WebviewPanel, string>;
 
     private readonly clipboard: Clipboard = env.clipboard;
 
     protected get viewType(): string {
-        return 'rest-response';
+        return 'swagger-json';
     }
 
     protected get previewActiveContextKey(): string {
         return 'cliaSwaggerPreviewFocus';
     }
 
-    private get activeResponse(): HttpResponse | undefined {
+    private get activeResponse(): string | undefined {
         return this.activePanel ? this.panelResponses.get(this.activePanel) : undefined;
     }
 
@@ -46,17 +46,17 @@ export class HttpResponseWebview extends BaseWebview {
         super(context);
 
         // Init response webview map
-        this.panelResponses = new Map<WebviewPanel, HttpResponse>();
+        this.panelResponses = new Map<WebviewPanel, string>();
 
         this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.fold-response', this.foldResponseBody, this));
         this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.unfold-response', this.unfoldResponseBody, this));
 
         this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.copy-response-body', this.copyBody, this));
         this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.save-response', this.save, this));
-        this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.save-response-body', this.saveBody, this));
+        // this.context.subscriptions.push(commands.registerCommand('clia-swagger-generator.save-response-body', this.saveBody, this));
     }
 
-    public async render(response: HttpResponse, column: ViewColumn) {
+    public async render(response: string, column: ViewColumn) {
         let panel: WebviewPanel;
         if (this.settings.showResponseInDifferentTab || this.panels.length === 0) {
             panel = window.createWebviewPanel(
@@ -126,7 +126,7 @@ export class HttpResponseWebview extends BaseWebview {
     @trace('Copy Response Body')
     private async copyBody() {
         if (this.activeResponse) {
-            await this.clipboard.writeText(this.activeResponse.body);
+            await this.clipboard.writeText(this.activeResponse);
         }
     }
 
@@ -134,7 +134,7 @@ export class HttpResponseWebview extends BaseWebview {
     private async save() {
         if (this.activeResponse) {
             const fullResponse = this.getFullResponseString(this.activeResponse);
-            const defaultFilePath = UserDataManager.getResponseSaveFilePath(`Response-${Date.now()}.http`);
+            const defaultFilePath = UserDataManager.getResponseSaveFilePath(`Swagger-${Date.now()}.json`);
             try {
                 await this.openSaveDialog(defaultFilePath, fullResponse);
             } catch {
@@ -146,44 +146,44 @@ export class HttpResponseWebview extends BaseWebview {
     @trace('Save Response Body')
     private async saveBody() {
         if (this.activeResponse) {
-            const fileName = HttpResponseWebview.getResponseBodyOuptutFilename(this.activeResponse, this.settings);
+            const fileName = SwaggerWebview.getResponseBodyOuptutFilename(this.activeResponse, this.settings);
             const defaultFilePath = UserDataManager.getResponseBodySaveFilePath(fileName);
 
             try {
-                await this.openSaveDialog(defaultFilePath, this.activeResponse.bodyBuffer);
+                await this.openSaveDialog(defaultFilePath, this.activeResponse);
             } catch {
                 window.showErrorMessage('Failed to save latest response body to disk');
             }
         }
     }
 
-    private static getResponseBodyOuptutFilename(activeResponse: HttpResponse, settings: SystemSettings) {
-        if (settings.useContentDispositionFilename) {
-            const cdHeader = getHeader(activeResponse.headers, 'content-disposition');
-            if (cdHeader) {
-                const disposition = contentDisposition.parse(cdHeader);
-                if ((disposition?.type === "attachment" || disposition?.type === "inline") && disposition?.parameters?.hasOwnProperty("filename")) {
-                    const serverProvidedFilename = disposition.parameters.filename;
-                    return serverProvidedFilename;
-                }
-            }
-        }
+    private static getResponseBodyOuptutFilename(activeResponse: string, settings: SystemSettings) {
+        // if (settings.useContentDispositionFilename) {
+        //     const cdHeader = getHeader(activeResponse.headers, 'content-disposition');
+        //     if (cdHeader) {
+        //         const disposition = contentDisposition.parse(cdHeader);
+        //         if ((disposition?.type === "attachment" || disposition?.type === "inline") && disposition?.parameters?.hasOwnProperty("filename")) {
+        //             const serverProvidedFilename = disposition.parameters.filename;
+        //             return serverProvidedFilename;
+        //         }
+        //     }
+        // }
 
-        const extension = MimeUtility.getExtension(activeResponse.contentType, settings.mimeAndFileExtensionMapping);
-        const defaultFileName = !extension ? `Response-${Date.now()}` : `Response-${Date.now()}.${extension}`;
+        // const extension = MimeUtility.getExtension(activeResponse.contentType, settings.mimeAndFileExtensionMapping);
+        const defaultFileName = `Swagger-${Date.now()}.json`;
         return defaultFileName;
     }
 
-    private getTitle(response: HttpResponse): string {
-        const prefix = (this.settings.requestNameAsResponseTabTitle && response.request.name) || 'Response';
-        return `${prefix}(${response.timingPhases.total ?? 0}ms)`;
+    private getTitle(response: string): string {
+        // const prefix = (this.settings.requestNameAsResponseTabTitle && response.request.name) || 'Response';
+        return `Swagger.json`;
     }
 
-    private getFullResponseString(response: HttpResponse): string {
-        const statusLine = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}${os.EOL}`;
-        const headerString = Object.entries(response.headers).reduce((acc, [name, value]) => acc + `${name}: ${value}${os.EOL}`, '');
-        const body = response.body ? `${os.EOL}${response.body}` : '';
-        return `${statusLine}${headerString}${body}`;
+    private getFullResponseString(response: string): string {
+        // const statusLine = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}${os.EOL}`;
+        // const headerString = Object.entries(response.headers).reduce((acc, [name, value]) => acc + `${name}: ${value}${os.EOL}`, '');
+        // const body = response.body ? `${os.EOL}${response.body}` : '';
+        return `${response}`;
     }
 
     private async openSaveDialog(path: string, content: string | Buffer) {
@@ -202,20 +202,20 @@ export class HttpResponseWebview extends BaseWebview {
         }
     }
 
-    private getHtmlForWebview(panel: WebviewPanel, response: HttpResponse): string {
+    private getHtmlForWebview(panel: WebviewPanel, response: string): string {
         let innerHtml: string;
         let width = 2;
-        let contentType = response.contentType;
+        let contentType = 'application/json; charset=utf-8';
         if (contentType) {
             contentType = contentType.trim();
         }
-        if (MimeUtility.isBrowserSupportedImageFormat(contentType) && !HttpResponseWebview.isHeadRequest(response)) {
-            innerHtml = `<img src="data:${contentType};base64,${base64(response.bodyBuffer)}">`;
-        } else {
+        // if (MimeUtility.isBrowserSupportedImageFormat(contentType) && !SwaggerWebview.isHeadRequest(response)) {
+        //     innerHtml = `<img src="data:${contentType};base64,${base64(response.bodyBuffer)}">`;
+        // } else {
             const code = this.highlightResponse(response);
             width = (code.split(/\r\n|\r|\n/).length + 1).toString().length;
             innerHtml = `<pre><code>${this.addLineNums(code)}</code></pre>`;
-        }
+        // }
 
         // Content Security Policy
         const nonce = new Date().getTime() + '' + new Date().getMilliseconds();
@@ -236,7 +236,7 @@ export class HttpResponseWebview extends BaseWebview {
     </head>
     <body>
         <div>
-            ${this.settings.disableAddingHrefLinkForLargeResponse && response.bodySizeInBytes > this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024
+            ${this.settings.disableAddingHrefLinkForLargeResponse
                 ? innerHtml
                 : this.addUrlLinks(innerHtml)}
             <a id="scroll-to-top" role="button" aria-label="scroll to top" title="Scroll To Top"><span class="icon"></span></a>
@@ -245,52 +245,54 @@ export class HttpResponseWebview extends BaseWebview {
     </body>`;
     }
 
-    private highlightResponse(response: HttpResponse): string {
+    private highlightResponse(response: string): string {
         let code = '';
-        const previewOption = this.settings.previewOption;
-        if (previewOption === PreviewOption.Exchange) {
-            // for add request details
-            const request = response.request;
-            const requestNonBodyPart = `${request.method} ${request.url} HTTP/1.1
-${HttpResponseWebview.formatHeaders(request.headers)}`;
-            code += hljs.highlight('http', requestNonBodyPart + '\r\n').value;
-            if (request.body) {
-                if (typeof request.body !== 'string') {
-                    request.body = 'NOTE: Request Body From File Is Not Shown';
-                }
-                const requestBodyPart = `${ResponseFormatUtility.formatBody(request.body, request.contentType, true)}`;
-                const bodyLanguageAlias = HttpResponseWebview.getHighlightLanguageAlias(request.contentType, request.body);
-                if (bodyLanguageAlias) {
-                    code += hljs.highlight(bodyLanguageAlias, requestBodyPart).value;
-                } else {
-                    code += hljs.highlightAuto(requestBodyPart).value;
-                }
-                code += '\r\n';
-            }
+        code += hljs.highlight('json', response).value;
 
-            code += '\r\n'.repeat(2);
-        }
+//        const previewOption = this.settings.previewOption;
+//         if (previewOption === PreviewOption.Exchange) {
+//             // for add request details
+//             const request = response.request;
+//             const requestNonBodyPart = `${request.method} ${request.url} HTTP/1.1
+// ${SwaggerWebview.formatHeaders(request.headers)}`;
+//             code += hljs.highlight('http', requestNonBodyPart + '\r\n').value;
+//             if (request.body) {
+//                 if (typeof request.body !== 'string') {
+//                     request.body = 'NOTE: Request Body From File Is Not Shown';
+//                 }
+//                 const requestBodyPart = `${ResponseFormatUtility.formatBody(request.body, request.contentType, true)}`;
+//                 const bodyLanguageAlias = SwaggerWebview.getHighlightLanguageAlias(request.contentType, request.body);
+//                 if (bodyLanguageAlias) {
+//                     code += hljs.highlight(bodyLanguageAlias, requestBodyPart).value;
+//                 } else {
+//                     code += hljs.highlightAuto(requestBodyPart).value;
+//                 }
+//                 code += '\r\n';
+//             }
 
-        if (previewOption !== PreviewOption.Body) {
-            const responseNonBodyPart = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}
-${HttpResponseWebview.formatHeaders(response.headers)}`;
-            code += hljs.highlight('http', responseNonBodyPart + (previewOption !== PreviewOption.Headers ? '\r\n' : '')).value;
-        }
+//             code += '\r\n'.repeat(2);
+//         }
 
-        if (previewOption !== PreviewOption.Headers) {
-            const responseBodyPart = `${ResponseFormatUtility.formatBody(response.body, response.contentType, this.settings.suppressResponseBodyContentTypeValidationWarning)}`;
-            if (this.settings.disableHighlightResonseBodyForLargeResponse &&
-                response.bodySizeInBytes > this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024) {
-                code += responseBodyPart;
-            } else {
-                const bodyLanguageAlias = HttpResponseWebview.getHighlightLanguageAlias(response.contentType, responseBodyPart);
-                if (bodyLanguageAlias) {
-                    code += hljs.highlight(bodyLanguageAlias, responseBodyPart).value;
-                } else {
-                    code += hljs.highlightAuto(responseBodyPart).value;
-                }
-            }
-        }
+//         if (previewOption !== PreviewOption.Body) {
+//             const responseNonBodyPart = `HTTP/${response.httpVersion} ${response.statusCode} ${response.statusMessage}
+// ${SwaggerWebview.formatHeaders(response.headers)}`;
+//             code += hljs.highlight('http', responseNonBodyPart + (previewOption !== PreviewOption.Headers ? '\r\n' : '')).value;
+//         }
+
+//         if (previewOption !== PreviewOption.Headers) {
+//             const responseBodyPart = `${ResponseFormatUtility.formatBody(response.body, response.contentType, this.settings.suppressResponseBodyContentTypeValidationWarning)}`;
+//             if (this.settings.disableHighlightResonseBodyForLargeResponse &&
+//                 response.bodySizeInBytes > this.settings.largeResponseBodySizeLimitInMB * 1024 * 1024) {
+//                 code += responseBodyPart;
+//             } else {
+//                 const bodyLanguageAlias = SwaggerWebview.getHighlightLanguageAlias(response.contentType, responseBodyPart);
+//                 if (bodyLanguageAlias) {
+//                     code += hljs.highlight(bodyLanguageAlias, responseBodyPart).value;
+//                 } else {
+//                     code += hljs.highlightAuto(responseBodyPart).value;
+//                 }
+//             }
+//         }
 
         return code;
     }

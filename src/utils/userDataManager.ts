@@ -4,7 +4,7 @@ import * as path from 'path';
 import { HistoricalHttpRequest } from '../models/httpRequest';
 import { JsonFileUtility } from './jsonFileUtility';
 
-const restClientDir = 'clia-rest-client';
+const restClientDir = 'clia-swagger-generator';
 const rootPath = path.join(os.homedir(), `.${restClientDir}`);
 
 function getCachePath(): string {

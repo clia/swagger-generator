@@ -55,7 +55,7 @@ export class CustomVariableDiagnosticsProvider {
 
     private queueAll(event?: ConfigurationChangeEvent) {
         workspace.textDocuments
-            .filter(document => event === undefined || event.affectsConfiguration('clia-rest-client', document.uri))
+            .filter(document => event === undefined || event.affectsConfiguration('clia-swagger-generator', document.uri))
             .forEach(document => this.queue(document));
     }
 

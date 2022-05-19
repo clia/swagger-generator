@@ -2,7 +2,7 @@ import { EOL } from 'os';
 import * as url from 'url';
 import { Clipboard, env, ExtensionContext, QuickInputButtons, window } from 'vscode';
 import Logger from '../logger';
-import { IRestClientSettings, RequestSettings, RestClientSettings } from '../models/configurationSettings';
+import { ICliaSwaggerSettings, RequestSettings, RestClientSettings } from '../models/configurationSettings';
 import { HARCookie, HARHeader, HARHttpRequest, HARPostData } from '../models/harHttpRequest';
 import { HttpRequest } from '../models/httpRequest';
 import { RequestParserFactory } from '../models/requestParserFactory';
@@ -53,7 +53,7 @@ export class CodeSnippetController {
 
         const { text, metadatas } = selectedRequest;
         const requestSettings = new RequestSettings(metadatas);
-        const settings: IRestClientSettings = new RestClientSettings(requestSettings);
+        const settings: ICliaSwaggerSettings = new RestClientSettings(requestSettings);
 
         // parse http request
         const httpRequest = await RequestParserFactory.createRequestParser(text, settings).parseHttpRequest();
@@ -125,7 +125,7 @@ export class CodeSnippetController {
 
         const { text, metadatas } = selectedRequest;
         const requestSettings = new RequestSettings(metadatas);
-        const settings: IRestClientSettings = new RestClientSettings(requestSettings);
+        const settings: ICliaSwaggerSettings = new RestClientSettings(requestSettings);
 
         // parse http request
         const httpRequest = await RequestParserFactory.createRequestParser(text, settings).parseHttpRequest();

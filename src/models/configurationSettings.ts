@@ -17,7 +17,7 @@ export type HostCertificates = {
     }
 };
 
-export interface IRestClientSettings {
+export interface ICliaSwaggerSettings {
     readonly followRedirect: boolean;
     readonly defaultHeaders: RequestHeaders;
     readonly timeoutInMilliseconds: number;
@@ -51,9 +51,12 @@ export interface IRestClientSettings {
     readonly urlSignConfiguration: UrlSignConfiguration;
     readonly urlSignKeySecrets: { [key: string]: string };
     readonly useContentDispositionFilename: boolean;
+    readonly host?: string;
+    readonly basePath?: string;
+    readonly schemes?: string;
 }
 
-export class SystemSettings implements IRestClientSettings {
+export class SystemSettings implements ICliaSwaggerSettings {
     private _followRedirect: boolean;
     private _defaultHeaders: RequestHeaders;
     private _timeoutInMilliseconds: number;
@@ -87,6 +90,9 @@ export class SystemSettings implements IRestClientSettings {
     private _urlSignConfiguration: UrlSignConfiguration;
     private _urlSignKeySecrets: { [key: string]: string };
     private _useContentDispositionFilename: boolean;
+    private _host?: string;
+    private _basePath?: string;
+    private _schemes?: string;
 
     public get followRedirect() {
         return this._followRedirect;
@@ -220,6 +226,18 @@ export class SystemSettings implements IRestClientSettings {
         return this._useContentDispositionFilename;
     }
 
+    public get host() {
+        return this._host;
+    }
+
+    public get basePath() {
+        return this._basePath;
+    }
+
+    public get schemes() {
+        return this._schemes;
+    }
+
     private readonly brackets: CharacterPair[];
 
     private static _instance: SystemSettings;
@@ -256,7 +274,9 @@ export class SystemSettings implements IRestClientSettings {
 
     private initializeSettings() {
         const document = getCurrentTextDocument();
-        const restClientSettings = workspace.getConfiguration("clia-rest-client", document?.uri);
+console.log("document: ", document);
+        const restClientSettings = workspace.getConfiguration("clia-swagger-generator", document?.uri);
+console.log("restClientSettings: ", restClientSettings);
         this._followRedirect = restClientSettings.get<boolean>("followredirect", true);
         this._defaultHeaders = restClientSettings.get<RequestHeaders>("defaultHeaders",
                                                                      {
@@ -314,11 +334,15 @@ export class SystemSettings implements IRestClientSettings {
         });
         this._urlSignKeySecrets = restClientSettings.get<{ [key: string]: string }>("urlSignKeySecrets", {});
         this._useContentDispositionFilename = restClientSettings.get<boolean>('useContentDispositionFilename', true);
+        this._host = restClientSettings.get<string>("host", "");
+        this._basePath = restClientSettings.get<string>("basePath", "/");
+        this._schemes = restClientSettings.get<string>("schemes", "https");
         languages.setLanguageConfiguration('http', { brackets: this._addRequestBodyLineIndentationAroundBrackets ? this.brackets : [] });
 
         const httpSettings = workspace.getConfiguration("http");
         this._proxy = httpSettings.get<string>('proxy');
         this._proxyStrictSSL = httpSettings.get<boolean>('proxyStrictSSL', false);
+console.log("restClientSettings: ", restClientSettings);
     }
 
     private parseColumn(value: string): ViewColumn {
@@ -333,7 +357,7 @@ export class SystemSettings implements IRestClientSettings {
     }
 }
 
-export class RequestSettings implements Partial<IRestClientSettings> {
+export class RequestSettings implements Partial<ICliaSwaggerSettings> {
 
     private _followRedirect?: boolean = undefined;
 
@@ -356,7 +380,7 @@ export class RequestSettings implements Partial<IRestClientSettings> {
     }
 }
 
-export class RestClientSettings implements IRestClientSettings {
+export class RestClientSettings implements ICliaSwaggerSettings {
 
     public get followRedirect() {
         return this.requestSettings.followRedirect ?? this.systemSettings.followRedirect;
@@ -488,6 +512,18 @@ export class RestClientSettings implements IRestClientSettings {
 
     public get useContentDispositionFilename() {
         return this.systemSettings.useContentDispositionFilename;
+    }
+
+    public get host() {
+        return this.systemSettings.host;
+    }
+
+    public get basePath() {
+        return this.systemSettings.basePath;
+    }
+
+    public get schemes() {
+        return this.systemSettings.schemes;
     }
 
     private readonly systemSettings = SystemSettings.Instance;
