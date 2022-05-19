@@ -1,9 +1,4 @@
-import { EOL } from 'os';
-import { Position, Range, TextDocument, TextEditor, window } from 'vscode';
-import * as Constants from '../common/constants';
-import { fromString as ParseReqMetaKey, RequestMetadata } from '../models/requestMetadata';
-import { SelectedRequest } from '../models/SelectedRequest';
-// import { VariableProcessor } from './variableProcessor';
+import { Range, TextDocument } from 'vscode';
 
 export class SwaggerGenerator {
 

@@ -1,21 +1,18 @@
 import * as fs from 'fs-extra';
-import * as os from 'os';
-import { languages, Clipboard, commands, env, ExtensionContext, Position, Range, Uri, TextDocument, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
-import { RequestHeaders, ResponseHeaders } from '../models/base';
+import { Clipboard, commands, env, ExtensionContext, Uri, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
+// import { RequestHeaders, ResponseHeaders } from '../models/base';
 import { SystemSettings } from '../models/configurationSettings';
-import { HttpRequest } from '../models/httpRequest';
+// import { HttpRequest } from '../models/httpRequest';
 // import { string } from '../models/httpResponse';
-import { PreviewOption } from '../models/previewOption';
 import { trace } from '../utils/decorator';
 import { disposeAll } from '../utils/dispose';
-import { MimeUtility } from '../utils/mimeUtility';
-import { base64, getHeader, isJSONString } from '../utils/misc';
-import { ResponseFormatUtility } from '../utils/responseFormatUtility';
+// import { MimeUtility } from '../utils/mimeUtility';
+// import { isJSONString } from '../utils/misc';
 import { UserDataManager } from '../utils/userDataManager';
 import { BaseWebview } from './baseWebview';
 
 const hljs = require('highlight.js');
-const contentDisposition = require('content-disposition');
+// const contentDisposition = require('content-disposition');
 
 const OPEN = 'Open';
 const COPYPATH = 'Copy Path';
@@ -418,41 +415,41 @@ export class SwaggerWebview extends BaseWebview {
         return result;
     }
 
-    private static formatHeaders(headers: RequestHeaders | ResponseHeaders): string {
-        let headerString = '';
-        for (const header in headers) {
-            if (headers.hasOwnProperty(header)) {
-                let value = headers[header];
-                if (typeof headers[header] !== 'string') {
-                    value = <string>headers[header];
-                }
-                headerString += `${header}: ${value}\n`;
-            }
-        }
-        return headerString;
-    }
+    // private static formatHeaders(headers: RequestHeaders | ResponseHeaders): string {
+    //     let headerString = '';
+    //     for (const header in headers) {
+    //         if (headers.hasOwnProperty(header)) {
+    //             let value = headers[header];
+    //             if (typeof headers[header] !== 'string') {
+    //                 value = <string>headers[header];
+    //             }
+    //             headerString += `${header}: ${value}\n`;
+    //         }
+    //     }
+    //     return headerString;
+    // }
 
-    private static getHighlightLanguageAlias(contentType: string | undefined, content: string | null = null): string | null {
-        if (MimeUtility.isJSON(contentType)) {
-            return 'json';
-        } else if (MimeUtility.isJavaScript(contentType)) {
-            return 'javascript';
-        } else if (MimeUtility.isXml(contentType)) {
-            return 'xml';
-        } else if (MimeUtility.isHtml(contentType)) {
-            return 'html';
-        } else if (MimeUtility.isCSS(contentType)) {
-            return 'css';
-        } else {
-            // If content is provided, guess from content if not content type is matched
-            if (content && isJSONString(content)) {
-                return 'json';
-            }
-            return null;
-        }
-    }
+    // private static getHighlightLanguageAlias(contentType: string | undefined, content: string | null = null): string | null {
+    //     if (MimeUtility.isJSON(contentType)) {
+    //         return 'json';
+    //     } else if (MimeUtility.isJavaScript(contentType)) {
+    //         return 'javascript';
+    //     } else if (MimeUtility.isXml(contentType)) {
+    //         return 'xml';
+    //     } else if (MimeUtility.isHtml(contentType)) {
+    //         return 'html';
+    //     } else if (MimeUtility.isCSS(contentType)) {
+    //         return 'css';
+    //     } else {
+    //         // If content is provided, guess from content if not content type is matched
+    //         if (content && isJSONString(content)) {
+    //             return 'json';
+    //         }
+    //         return null;
+    //     }
+    // }
 
-    private static isHeadRequest({ request: { method } }: { request: HttpRequest }): boolean {
-        return method.toLowerCase() === 'head';
-    }
+    // private static isHeadRequest({ request: { method } }: { request: HttpRequest }): boolean {
+    //     return method.toLowerCase() === 'head';
+    // }
 }

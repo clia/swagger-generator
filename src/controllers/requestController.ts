@@ -1,17 +1,10 @@
 import { ExtensionContext, Range, TextDocument, ViewColumn, window } from 'vscode';
 import Logger from '../logger';
-import { ICliaSwaggerSettings, RequestSettings, RestClientSettings } from '../models/configurationSettings';
-import { HistoricalHttpRequest, HttpRequest } from '../models/httpRequest';
-import { RequestMetadata } from '../models/requestMetadata';
-import { RequestParserFactory } from '../models/requestParserFactory';
+import { ICliaSwaggerSettings } from '../models/configurationSettings';
+import { HttpRequest } from '../models/httpRequest';
 import { trace } from "../utils/decorator";
-import { HttpClient } from '../utils/httpClient';
 import { RequestState, RequestStatusEntry } from '../utils/requestStatusBarEntry';
-import { RequestVariableCache } from "../utils/requestVariableCache";
-import { Selector } from '../utils/selector';
-import { UserDataManager } from '../utils/userDataManager';
 import { getCurrentTextDocument } from '../utils/workspaceUtility';
-import { HttpResponseTextDocumentView } from '../views/httpResponseTextDocumentView';
 // import { HttpResponseWebview } from '../views/httpResponseWebview';
 import { SwaggerWebview } from '../views/swaggerWebview';
 import { SwaggerGenerator } from '../swagger/generator';
@@ -20,7 +13,6 @@ export class RequestController {
     private _requestStatusEntry: RequestStatusEntry;
     // private _httpClient: HttpClient;
     private _webview: SwaggerWebview;
-    private _textDocumentView: HttpResponseTextDocumentView;
     private _lastRequestSettingTuple: [HttpRequest, ICliaSwaggerSettings];
     private _lastPendingRequest?: HttpRequest;
 
@@ -29,7 +21,6 @@ export class RequestController {
         // this._httpClient = new HttpClient();
         this._webview = new SwaggerWebview(context);
         this._webview.onDidCloseAllWebviewPanels(() => this._requestStatusEntry.update({ state: RequestState.Closed }));
-        this._textDocumentView = new HttpResponseTextDocumentView();
     }
 
     @trace('Request')
@@ -76,7 +67,7 @@ export class RequestController {
             return;
         }
 
-        const [request, settings] = this._lastRequestSettingTuple;
+        // const [request, settings] = this._lastRequestSettingTuple;
 
         // // TODO: recover from last request settings
         // await this.runCore(request, settings);
