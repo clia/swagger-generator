@@ -1,0 +1,718 @@
+{
+  "name": "clia-rest-client",
+  "displayName": "Clia REST Client",
+  "description": "REST Client for Visual Studio Code with URL Signature",
+  "version": "0.25.0",
+  "publisher": "clia",
+  "author": {
+    "name": "Cris Liao",
+    "email": "clia@163.com"
+  },
+  "icon": "images/rest_icon.png",
+  "galleryBanner": {
+    "color": "#000000",
+    "theme": "dark"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clia/vscode-cliarestclient/issues",
+    "email": "clia@163.com"
+  },
+  "homepage": "https://github.com/clia/vscode-cliarestclient/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clia/vscode-cliarestclient.git"
+  },
+  "engines": {
+    "vscode": "^1.57.0"
+  },
+  "categories": [
+    "Other",
+    "Snippets",
+    "Linters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "REST",
+    "Http",
+    "GraphQL",
+    "multi-root ready"
+  ],
+  "activationEvents": [
+    "onCommand:clia-rest-client.request",
+    "onCommand:clia-rest-client.history",
+    "onCommand:clia-rest-client.clear-history",
+    "onCommand:clia-rest-client.save-response",
+    "onCommand:clia-rest-client.save-response-body",
+    "onCommand:clia-rest-client.copy-response-body",
+    "onCommand:clia-rest-client.switch-environment",
+    "onCommand:clia-rest-client.clear-aad-token-cache",
+    "onCommand:clia-rest-client.cancel-request",
+    "onCommand:clia-rest-client.rerun-last-request",
+    "onCommand:clia-rest-client.generate-codesnippet",
+    "onCommand:clia-rest-client.copy-codesnippet",
+    "onCommand:clia-rest-client.copy-request-as-curl",
+    "onCommand:clia-rest-client.fold-response",
+    "onCommand:clia-rest-client.unfold-response",
+    "onLanguage:http",
+    "onLanguage:markdown"
+  ],
+  "main": "./dist/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "http",
+        "aliases": [
+          "HTTP",
+          "Http",
+          "http"
+        ],
+        "extensions": [
+          ".http",
+          ".rest"
+        ],
+        "firstLine": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)\\s+(.*?)HTTP/[0-9\\.]+$",
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "http",
+        "scopeName": "source.http",
+        "path": "./syntaxes/http.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "http",
+        "path": "./snippets/http.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "clia-rest-client.request",
+        "title": "Send Request",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.rerun-last-request",
+        "title": "Rerun Last Request",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.cancel-request",
+        "title": "Cancel Request",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.switch-environment",
+        "title": "Switch Environment",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.history",
+        "title": "View Request History",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.clear-history",
+        "title": "Clear Request History",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.save-response",
+        "title": "Save Full Response",
+        "icon": {
+          "light": "./images/save.svg",
+          "dark": "./images/save-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.save-response-body",
+        "title": "Save Response Body",
+        "icon": {
+          "light": "./images/save-body.svg",
+          "dark": "./images/save-body-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.copy-response-body",
+        "title": "Copy Response Body",
+        "icon": {
+          "light": "./images/copy.svg",
+          "dark": "./images/copy-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.generate-codesnippet",
+        "title": "Generate Code Snippet",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.copy-codesnippet",
+        "title": "Copy Code Snippet",
+        "icon": {
+          "light": "./images/copy.svg",
+          "dark": "./images/copy-inverse.svg"
+        },
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.copy-request-as-curl",
+        "title": "Copy Request As cURL",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.clear-aad-token-cache",
+        "title": "Clear Azure AD Token Cache",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.fold-response",
+        "title": "Fold Response",
+        "category": "Rest Client"
+      },
+      {
+        "command": "clia-rest-client.unfold-response",
+        "title": "Unfold Response",
+        "category": "Rest Client"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "clia-rest-client.fold-response",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "clia-rest-client.unfold-response",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "clia-rest-client.save-response",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "clia-rest-client.save-response-body",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "clia-rest-client.copy-response-body",
+          "when": "httpResponsePreviewFocus"
+        },
+        {
+          "command": "clia-rest-client.copy-codesnippet",
+          "when": "codeSnippetPreviewFocus"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "clia-rest-client.save-response",
+          "group": "navigation@1"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "clia-rest-client.save-response-body",
+          "group": "navigation@2"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "clia-rest-client.copy-response-body",
+          "group": "navigation@3"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "clia-rest-client.fold-response",
+          "group": "1_rest-client@1"
+        },
+        {
+          "when": "httpResponsePreviewFocus",
+          "command": "clia-rest-client.unfold-response",
+          "group": "1_rest-client@2"
+        },
+        {
+          "when": "codeSnippetPreviewFocus",
+          "command": "clia-rest-client.copy-codesnippet",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "clia-rest-client.request",
+          "when": "editorTextFocus && editorLangId == http",
+          "group": "clia-rest-client@1"
+        },
+        {
+          "command": "clia-rest-client.generate-codesnippet",
+          "when": "editorTextFocus && editorLangId == http",
+          "group": "clia-rest-client@2"
+        },
+        {
+          "command": "clia-rest-client.copy-request-as-curl",
+          "when": "editorTextFocus && editorLangId == http",
+          "group": "clia-rest-client@3"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "clia-rest-client.request",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "clia-rest-client.request",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      },
+      {
+        "command": "clia-rest-client.rerun-last-request",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "clia-rest-client.rerun-last-request",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      },
+      {
+        "command": "clia-rest-client.rerun-last-request",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l",
+        "when": "httpResponsePreviewFocus"
+      },
+      {
+        "command": "clia-rest-client.cancel-request",
+        "key": "ctrl+alt+k",
+        "mac": "cmd+alt+k",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "clia-rest-client.cancel-request",
+        "key": "ctrl+alt+k",
+        "mac": "cmd+alt+k",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      },
+      {
+        "command": "clia-rest-client.history",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h"
+      },
+      {
+        "command": "clia-rest-client.switch-environment",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e"
+      },
+      {
+        "command": "clia-rest-client.generate-codesnippet",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
+        "when": "editorTextFocus && editorLangId == 'http'"
+      },
+      {
+        "command": "clia-rest-client.generate-codesnippet",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
+        "when": "editorTextFocus && editorLangId == 'plaintext'"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Clia REST Client",
+      "properties": {
+        "clia-rest-client.followredirect": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Follow HTTP 3xx responses as redirects."
+        },
+        "clia-rest-client.defaultHeaders": {
+          "type": "object",
+          "default": {
+            "User-Agent": "vscode-restclient"
+          },
+          "scope": "resource",
+          "description": "If particular headers are omitted in request headers, these will be added as headers for each request."
+        },
+        "clia-rest-client.timeoutinmilliseconds": {
+          "type": "integer",
+          "default": 0,
+          "scope": "resource",
+          "description": "Timeout in milliseconds. 0 for infinity"
+        },
+        "clia-rest-client.showResponseInDifferentTab": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Show response in different tab"
+        },
+        "clia-rest-client.requestNameAsResponseTabTitle": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Show request name as the response tab title"
+        },
+        "clia-rest-client.rememberCookiesForSubsequentRequests": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Remember cookies for subsequent requests"
+        },
+        "clia-rest-client.enableTelemetry": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Send out anonymous usage data"
+        },
+        "clia-rest-client.excludeHostsForProxy": {
+          "type": "array",
+          "default": [],
+          "scope": "resource",
+          "description": "Excluded hosts when using using proxy settings"
+        },
+        "clia-rest-client.fontSize": {
+          "type": "number",
+          "scope": "resource",
+          "markdownDescription": "Controls the font size in pixels used in the response preview. When set to `0`, the value of `#editor.fontSize#` is used."
+        },
+        "clia-rest-client.fontFamily": {
+          "type": "string",
+          "default": null,
+          "scope": "resource",
+          "description": "Controls the font family used in the response preview"
+        },
+        "clia-rest-client.fontWeight": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "bold",
+            "bolder",
+            "lighter",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500",
+            "600",
+            "700",
+            "800",
+            "900"
+          ],
+          "scope": "resource",
+          "description": "Controls the font weight used in the response preview"
+        },
+        "clia-rest-client.environmentVariables": {
+          "type": "object",
+          "default": {
+            "$shared": {}
+          },
+          "scope": "resource",
+          "markdownDescription": "Sets the environments and custom variables belongs to it, especially the special environment name '$shared' is used to create variables shared across all the individual environments (e.g., `{\"$shared\": {\"version\": \"v1\"}, \"production\": {\"host\": \"api.example.com\"}, \"sandbox\":{\"host\":\"sandbox.api.example.com\"}}`)",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "default": {},
+                "description": "Sets the custom variables belong to this environment",
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "Value of the custom variable"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "clia-rest-client.mimeAndFileExtensionMapping": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "markdownDescription": "Sets the custom mapping of mime type and file extension of saved response body (e.g., `{\"application/atom+xml\": \"xml\"}`)"
+        },
+        "clia-rest-client.previewResponseInUntitledDocument": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Preview response in untitled document if set to true, otherwise displayed in html view"
+        },
+        "clia-rest-client.certificates": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "description": "Certificate paths for different hosts. The path can be absolute path or relative path(relative to workspace or current http file)",
+          "pattern": "^(?!http(s?)://)",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "default": {},
+                "description": "Certifcate paths for specific host(e.g., foo.com, bar.org:8081), port is optional",
+                "properties": {
+                  "cert": {
+                    "type": "string",
+                    "description": "Absolute or relative path of Public x509 certificate"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Absolute or relative path of Private key"
+                  },
+                  "pfx": {
+                    "type": "string",
+                    "description": "Absolute or relative path of PKCS #12 certificate"
+                  },
+                  "passphrase": {
+                    "type": "string",
+                    "description": "[Optional] A string of passphrase for the private key or pfx"
+                  }
+                },
+                "dependencies": {
+                  "cert": [
+                    "key"
+                  ],
+                  "key": [
+                    "cert"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "clia-rest-client.suppressResponseBodyContentTypeValidationWarning": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Suppress response body content type validation"
+        },
+        "clia-rest-client.previewOption": {
+          "type": "string",
+          "enum": [
+            "full",
+            "headers",
+            "body",
+            "exchange"
+          ],
+          "enumDescriptions": [
+            "Response headers, body and status line",
+            "Response headers and status line",
+            "Response body only",
+            "Whole HTTP exchange including both request and response"
+          ],
+          "default": "full",
+          "scope": "resource",
+          "description": "Response preview output option"
+        },
+        "clia-rest-client.disableHighlightResonseBodyForLargeResponse": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Controls whether to highlight response body for response whose size is larger than limit specified by `clia-rest-client.largeResponseSizeLimitInMB`"
+        },
+        "clia-rest-client.disableAddingHrefLinkForLargeResponse": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Controls whether to add href link in previewed response for response whose size is larger than limit specified by `clia-rest-client.largeResponseSizeLimitInMB`"
+        },
+        "clia-rest-client.largeResponseBodySizeLimitInMB": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "exclusiveMinimum": true,
+          "scope": "resource",
+          "markdownDescription": "Set the response body size threshold of MB to identify whether a response is a so-called 'large response', only used when `clia-rest-client.disableHighlightResonseBodyForLargeResponse` and/or `clia-rest-client.disableAddingHrefLinkForLargeResponse` is set to true"
+        },
+        "clia-rest-client.previewColumn": {
+          "type": "string",
+          "enum": [
+            "current",
+            "beside"
+          ],
+          "markdownEnumDescriptions": [
+            "Preview in the column of current request file",
+            "previewing at the side of the current active column and the side direction depends on `workbench.editor.openSideBySideDirection` setting, either right or below the current editor column"
+          ],
+          "default": "beside",
+          "scope": "resource",
+          "description": "Response preview column option"
+        },
+        "clia-rest-client.previewResponsePanelTakeFocus": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Preview response panel will take focus after receiving response."
+        },
+        "clia-rest-client.formParamEncodingStrategy": {
+          "type": "string",
+          "enum": [
+            "automatic",
+            "never",
+            "always"
+          ],
+          "markdownEnumDescriptions": [
+            "Detecting encoding or not automatically and do the encoding job if necessary",
+            "Treat provided request body as is, no encoding job will be applied",
+            "Use for the scenario that `automatic` option not working properly, e.g., some special characters(`+`) are not encoded correctly"
+          ],
+          "default": "automatic",
+          "scope": "resource",
+          "markdownDescription": "Form param encoding strategy for request body of `x-www-form-urlencoded`."
+        },
+        "clia-rest-client.addRequestBodyLineIndentationAroundBrackets": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Add line indentation around brackets(`{}`, `<>`, `[]`) in request body when pressing enter."
+        },
+        "clia-rest-client.decodeEscapedUnicodeCharacters": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "Decode escaped unicode characters in response body."
+        },
+        "clia-rest-client.logLevel": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "info",
+            "verbose"
+          ],
+          "default": "error",
+          "scope": "resource",
+          "description": "The verbosity of logging in the REST output panel"
+        },
+        "clia-rest-client.enableSendRequestCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Enable/disable sending request CodeLens in request file"
+        },
+        "clia-rest-client.enableCustomVariableReferencesCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Enable/disable custom variable references CodeLens in request file"
+        },
+        "clia-rest-client.urlSignConfiguration": {
+          "type": "object",
+          "default": {
+            "enableUrlSign": true,
+            "algorithm": {
+              "step1OrderParams": true,
+              "step1UrlEncodeParams": true,
+              "step1PercentEncode": false,
+              "step1AddEqual": false,
+              "step1AddAnd": false,
+              "step2SeparatorAnd": false,
+              "step2AddHttpMethod": false,
+              "step2AddPercentEncodeSlash": false,
+              "step2PercentEncode": false,
+              "step3ComputeAlgorithm": "md5",
+              "step3SecretAppend": "",
+              "step3TextAlgorithm": "hex"
+            },
+            "keyParamName": "appkey",
+            "signParamName": "sign"
+          },
+          "scope": "resource",
+          "markdownDescription": "Sets the URL Signature configuration"
+        },
+        "clia-rest-client.urlSignKeySecrets": {
+          "type": "object",
+          "default": {},
+          "scope": "resource",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "markdownDescription": "Sets the key and secret pairs for URL Signature"
+        },
+        "clia-rest-client.useContentDispositionFilename": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Enable/disable using filename from 'content-disposition' header, when saving response body"
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[http]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode development",
+    "watch": "webpack --mode development --watch --info-verbosity verbose",
+    "tslint": "tslint --project tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/aws4": "^1.5.1",
+    "@types/fs-extra": "^5.0.4",
+    "@types/got": "^9.6.8",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.57.0",
+    "mocha": "^6.1.4",
+    "ts-loader": "^5.3.2",
+    "tslint": "^6.1.2",
+    "typescript": "^3.7.3",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "adal-node": "^0.1.26",
+    "applicationinsights": "^1.0.5",
+    "aws4": "^1.9.1",
+    "code-highlight-linenums": "^0.2.1",
+    "combined-stream": "^1.0.5",
+    "content-disposition": "^0.5.3",
+    "dayjs": "^1.8.20",
+    "dotenv": "^8.2.0",
+    "encodeurl": "^1.0.1",
+    "filesize": "^3.3.0",
+    "fs-extra": "^5.0.0",
+    "got": "^9.6.0",
+    "highlight.js": "^10.4.1",
+    "http-proxy-agent": "^2.1.0",
+    "https-proxy-agent": "^2.2.3",
+    "httpsnippet": "^1.22.0",
+    "iconv-lite": "^0.4.15",
+    "jsonc-parser": "^2.0.2",
+    "jsonpath-plus": "^0.20.1",
+    "mime-types": "^2.1.14",
+    "pretty-data": "^0.40.0",
+    "tough-cookie": "^3.0.1",
+    "tough-cookie-file-store-bugfix": "Huachao/tough-cookie-file-store-bugfix",
+    "uuid": "^3.3.2",
+    "xmldom": "^0.5.0",
+    "xpath": "^0.0.27",
+    "yargs-parser": "~11.1.1"
+  }
+}
