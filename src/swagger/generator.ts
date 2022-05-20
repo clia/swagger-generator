@@ -123,6 +123,7 @@ export class SwaggerGenerator {
         let summary = '';
         let desc = '';
         let rParams: ParamDef[] = [];
+        let inPre = false;
         for (let i = start; i < range.start.line - 1; i++) {
             const line = lines[i].trim();
 
@@ -148,12 +149,28 @@ export class SwaggerGenerator {
                 summary = summary.replace(/"/g, '\\"');
             }
 
+            const enterPre = lines[i - 1].indexOf('<pre>') != -1;
+            const exitPre = cmt.indexOf('</pre>') != -1;
+
             if (cmt.indexOf('@returns') === -1) {
                 if (desc !== '') {
-                    desc += '\\n';
+                    if (enterPre || exitPre) {
+                        // No extra new line
+                    } else if (inPre) {
+                        desc += '\\n';
+                    } else {
+                        desc += '<br>';
+                    }
                 }
 
                 desc += cmt;
+            }
+
+            if (cmt.indexOf('<pre>') != -1) {
+                inPre = true;
+            }
+            if (cmt.indexOf('</pre>') != -1) {
+                inPre = false;
             }
 
             if (cmt.indexOf('@returns') !== -1) {
