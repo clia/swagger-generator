@@ -1,6 +1,6 @@
 import { ExtensionContext, Range, TextDocument, ViewColumn, window } from 'vscode';
 import Logger from '../logger';
-import { ICliaSwaggerSettings } from '../models/configurationSettings';
+import { ICliaSwaggerSettings, RequestSettings, RestClientSettings } from '../models/configurationSettings';
 import { HttpRequest } from '../models/httpRequest';
 import { trace } from "../utils/decorator";
 import { RequestState, RequestStatusEntry } from '../utils/requestStatusBarEntry';
@@ -8,6 +8,7 @@ import { getCurrentTextDocument } from '../utils/workspaceUtility';
 // import { HttpResponseWebview } from '../views/httpResponseWebview';
 import { SwaggerWebview } from '../views/swaggerWebview';
 import { SwaggerGenerator } from '../swagger/generator';
+import { RequestMetadata } from '../models/requestMetadata';
 
 export class RequestController {
     private _requestStatusEntry: RequestStatusEntry;
@@ -31,7 +32,12 @@ export class RequestController {
             return;
         }
 
-        const swagger = SwaggerGenerator.createSwagger(document, range);
+        const metadatas = new Map<RequestMetadata, string | undefined>();
+        const requestSettings = new RequestSettings(metadatas);
+        const settings: ICliaSwaggerSettings = new RestClientSettings(requestSettings);
+
+        let generator = new SwaggerGenerator();
+        const swagger = generator.createSwagger(document, range, settings);
         if (!swagger) {
             return;
         }

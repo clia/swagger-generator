@@ -2,7 +2,7 @@
   "name": "clia-swagger-generator",
   "displayName": "Clia Swagger Generator",
   "description": "Generate Swagger description from Rust Web API",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "clia",
   "author": {
     "name": "Cris Liao",
@@ -27,16 +27,13 @@
     "vscode": "^1.57.0"
   },
   "categories": [
-    "Other",
-    "Snippets",
-    "Linters",
-    "Programming Languages"
+    "Other"
   ],
   "keywords": [
     "Swagger",
     "Generator",
     "Rust",
-    "multi-root ready"
+    "Web API"
   ],
   "activationEvents": [
     "onCommand:clia-swagger-generator.request",
@@ -54,40 +51,10 @@
     "onCommand:clia-swagger-generator.copy-request-as-curl",
     "onCommand:clia-swagger-generator.fold-response",
     "onCommand:clia-swagger-generator.unfold-response",
-    "onLanguage:rust",
-    "onLanguage:http"
+    "onLanguage:rust"
   ],
   "main": "./dist/extension",
   "contributes": {
-    "languages": [
-      {
-        "id": "http",
-        "aliases": [
-          "HTTP",
-          "Http",
-          "http"
-        ],
-        "extensions": [
-          ".http",
-          ".rest"
-        ],
-        "firstLine": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)\\s+(.*?)HTTP/[0-9\\.]+$",
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "http",
-        "scopeName": "source.http",
-        "path": "./syntaxes/http.tmLanguage.json"
-      }
-    ],
-    "snippets": [
-      {
-        "language": "http",
-        "path": "./snippets/http.json"
-      }
-    ],
     "commands": [
       {
         "command": "clia-swagger-generator.request",
@@ -218,107 +185,16 @@
           "when": "cliaSwaggerPreviewFocus",
           "command": "clia-swagger-generator.copy-response-body",
           "group": "navigation@2"
-        },
-        {
-          "when": "cliaSwaggerPreviewFocus",
-          "command": "clia-swagger-generator.fold-response",
-          "group": "1_clia-swagger-generator@1"
-        },
-        {
-          "when": "cliaSwaggerPreviewFocus",
-          "command": "clia-swagger-generator.unfold-response",
-          "group": "1_clia-swagger-generator@2"
-        },
-        {
-          "when": "codeSnippetPreviewFocus",
-          "command": "clia-swagger-generator.copy-codesnippet",
-          "group": "navigation"
         }
       ],
       "editor/context": [
         {
           "command": "clia-swagger-generator.request",
-          "when": "editorTextFocus && editorLangId == http",
+          "when": "editorTextFocus && editorLangId == rust",
           "group": "clia-swagger-generator@1"
-        },
-        {
-          "command": "clia-swagger-generator.generate-codesnippet",
-          "when": "editorTextFocus && editorLangId == http",
-          "group": "clia-swagger-generator@2"
-        },
-        {
-          "command": "clia-swagger-generator.copy-request-as-curl",
-          "when": "editorTextFocus && editorLangId == http",
-          "group": "clia-swagger-generator@3"
         }
       ]
     },
-    "keybindings": [
-      {
-        "command": "clia-swagger-generator.request",
-        "key": "ctrl+alt+r",
-        "mac": "cmd+alt+r",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
-      {
-        "command": "clia-swagger-generator.request",
-        "key": "ctrl+alt+r",
-        "mac": "cmd+alt+r",
-        "when": "editorTextFocus && editorLangId == 'plaintext'"
-      },
-      {
-        "command": "clia-swagger-generator.rerun-last-request",
-        "key": "ctrl+alt+l",
-        "mac": "cmd+alt+l",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
-      {
-        "command": "clia-swagger-generator.rerun-last-request",
-        "key": "ctrl+alt+l",
-        "mac": "cmd+alt+l",
-        "when": "editorTextFocus && editorLangId == 'plaintext'"
-      },
-      {
-        "command": "clia-swagger-generator.rerun-last-request",
-        "key": "ctrl+alt+l",
-        "mac": "cmd+alt+l",
-        "when": "cliaSwaggerPreviewFocus"
-      },
-      {
-        "command": "clia-swagger-generator.cancel-request",
-        "key": "ctrl+alt+k",
-        "mac": "cmd+alt+k",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
-      {
-        "command": "clia-swagger-generator.cancel-request",
-        "key": "ctrl+alt+k",
-        "mac": "cmd+alt+k",
-        "when": "editorTextFocus && editorLangId == 'plaintext'"
-      },
-      {
-        "command": "clia-swagger-generator.history",
-        "key": "ctrl+alt+h",
-        "mac": "cmd+alt+h"
-      },
-      {
-        "command": "clia-swagger-generator.switch-environment",
-        "key": "ctrl+alt+e",
-        "mac": "cmd+alt+e"
-      },
-      {
-        "command": "clia-swagger-generator.generate-codesnippet",
-        "key": "ctrl+alt+c",
-        "mac": "cmd+alt+c",
-        "when": "editorTextFocus && editorLangId == 'http'"
-      },
-      {
-        "command": "clia-swagger-generator.generate-codesnippet",
-        "key": "ctrl+alt+c",
-        "mac": "cmd+alt+c",
-        "when": "editorTextFocus && editorLangId == 'plaintext'"
-      }
-    ],
     "configuration": {
       "type": "object",
       "title": "Clia Swagger Generator",

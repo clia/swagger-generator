@@ -1,5 +1,5 @@
 ---
 name: Question
-about: Ask a question about Clia Swagger
+about: Ask a question about Clia Swagger Generator
 
 ---

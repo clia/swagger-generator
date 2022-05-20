@@ -1,10 +1,10 @@
 ---
 name: Bug report
-about: Create a report to help Clia Swagger improve
+about: Create a report to help Clia Swagger Generator improve
 
 ---
 
-- Clia Swagger Version:
+- Clia Swagger Generator Version:
 - VSCode Version:
 - OS Version:
 
