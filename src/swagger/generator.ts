@@ -132,42 +132,46 @@ export class SwaggerGenerator {
 
             let cmt = line;
             if (cmt.startsWith('///')) {
-                cmt = cmt.substring(3, cmt.length).trim();
+                cmt = cmt.substring(3, cmt.length);
+            }
+            if (cmt.startsWith(' ')) {
+                cmt = cmt.substring(1, cmt.length);
             }
 
-            if (summary === '' && cmt !== '') {
-                summary = cmt;
+            if (summary === '' && cmt.trim() !== '') {
+                summary = cmt.trim();
 
                 if (summary.endsWith('。') || summary.endsWith('.')) {
                     summary = summary.substring(0, summary.length - 1);
                 }
 
-                summary = summary.replace('"', '\\"');
+                summary = summary.replace(/"/g, '\\"');
             }
 
-            if (cmt.indexOf('@returns:') === -1) {
+            if (cmt.indexOf('@returns') === -1) {
                 if (desc !== '') {
                     desc += '\\n';
                 }
 
                 desc += cmt;
             }
-            desc = desc.replace('"', '\\"');
 
-            if (cmt.indexOf('@returns:') !== -1) {
-                const rType = cmt.substring(cmt.indexOf('@returns:') + 9, cmt.length).trim();
+            if (cmt.indexOf('@returns') !== -1) {
+                const rType = cmt.substring(cmt.indexOf('@returns') + 8, cmt.length).trim();
                 console.log("rType: ", rType);
                 rParams = this.getStructParams(rType, lines);
                 break;
             }
         }
+        desc = desc.replace(/"/g, '\\"');
+
         console.log("summary: ", summary);
         console.log("desc: ", desc);
         console.log("rParams: ", rParams);
 
         let paramArr: string[] = [];
         for (let p of qParams) {
-            let d = p.desc.replace('"', '\\"');
+            let d = p.desc.replace(/"/g, '\\"');
             paramArr.push(`
                     {
                         "name":"${p.name}",
@@ -189,7 +193,7 @@ export class SwaggerGenerator {
 
         let bodyArr: string[] = [];
         for (let p of jParams) {
-            let d = p.desc.replace('"', '\\"');
+            let d = p.desc.replace(/"/g, '\\"');
             bodyArr.push(`
                                 "${p.name}":{
                                     "type":"${p.type}",
@@ -228,7 +232,7 @@ export class SwaggerGenerator {
 
         let returnArr: string[] = [];
         for (let p of rParams) {
-            let d = p.desc.replace('"', '\\"');
+            let d = p.desc.replace(/"/g, '\\"');
             let t = p.type;
 
             if (t === 'string' || t === 'integer' || t === 'number' || t === 'boolean') {
@@ -252,7 +256,7 @@ export class SwaggerGenerator {
                 let subArr: string[] = [];
 
                 for (let s of subParams) {
-                    let sd = s.desc.replace('"', '\\"');
+                    let sd = s.desc.replace(/"/g, '\\"');
                     subArr.push(`
                                         "${s.name}":{
                                             "type":"${s.type}",
@@ -284,7 +288,7 @@ export class SwaggerGenerator {
         }
         let schemes = 'https';
         if (typeof settings.schemes === 'string') {
-            schemes = settings.schemes.replace(',', '","');
+            schemes = settings.schemes.replace(/,/g, '","');
         }
 
         let consumes = '';

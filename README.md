@@ -41,7 +41,7 @@ pub struct TestInterfaceData {
 
 /// A test interface.
 ///
-/// @returns: TestInterfaceResponse
+/// @returns TestInterfaceResponse
 ///
 #[web::get("/mp/test-interface")]
 pub async fn test_interface(
