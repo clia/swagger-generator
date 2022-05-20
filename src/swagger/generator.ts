@@ -142,7 +142,7 @@ export class SwaggerGenerator {
                     summary = summary.substring(0, summary.length - 1);
                 }
 
-                summary = summary.replace('"', '\"');
+                summary = summary.replace('"', '\\"');
             }
 
             if (cmt.indexOf('@returns:') === -1) {
@@ -152,7 +152,7 @@ export class SwaggerGenerator {
 
                 desc += cmt;
             }
-            desc = desc.replace('"', '\"');
+            desc = desc.replace('"', '\\"');
 
             if (cmt.indexOf('@returns:') !== -1) {
                 const rType = cmt.substring(cmt.indexOf('@returns:') + 9, cmt.length).trim();
@@ -167,7 +167,7 @@ export class SwaggerGenerator {
 
         let paramArr: string[] = [];
         for (let p of qParams) {
-            let d = p.desc.replace('"', '\"');
+            let d = p.desc.replace('"', '\\"');
             paramArr.push(`
                     {
                         "name":"${p.name}",
@@ -189,7 +189,7 @@ export class SwaggerGenerator {
 
         let bodyArr: string[] = [];
         for (let p of jParams) {
-            let d = p.desc.replace('"', '\"');
+            let d = p.desc.replace('"', '\\"');
             bodyArr.push(`
                                 "${p.name}":{
                                     "type":"${p.type}",
@@ -228,7 +228,7 @@ export class SwaggerGenerator {
 
         let returnArr: string[] = [];
         for (let p of rParams) {
-            let d = p.desc.replace('"', '\"');
+            let d = p.desc.replace('"', '\\"');
             let t = p.type;
 
             if (t === 'string' || t === 'integer' || t === 'number' || t === 'boolean') {
@@ -252,7 +252,7 @@ export class SwaggerGenerator {
                 let subArr: string[] = [];
 
                 for (let s of subParams) {
-                    let sd = s.desc.replace('"', '\"');
+                    let sd = s.desc.replace('"', '\\"');
                     subArr.push(`
                                         "${s.name}":{
                                             "type":"${s.type}",
