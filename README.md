@@ -2,6 +2,8 @@
 
 Clia Swagger Generator is a VSCode extension to generate Swagger description from Rust Web API.
 
+## [中文文档](https://juejin.cn/post/7100010294360932383/)
+
 ## Example Rust Web API
 
 Below is an example Rust Web API definition. You can generate a Swagger description from this code.
